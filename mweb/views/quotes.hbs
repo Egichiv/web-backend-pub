@@ -79,7 +79,7 @@
           </thead>
           <tbody>
           {{#each quotes}}
-            {{> quote-row this isAuthenticated=../isAuthenticated}}
+            {{> quoteRow this isAuthenticated=../isAuthenticated}}
           {{/each}}
           </tbody>
         </table>
@@ -106,7 +106,7 @@
     {{else}}
       <div class="empty-state">
         <p>По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.</p>
-        <a href="/add-quote" class="btn btn-primary">Добавить первую цитату</a>
+        <a href="/addQuote" class="btn btn-primary">Добавить первую цитату</a>
       </div>
     {{/if}}
   </section>

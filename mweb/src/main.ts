@@ -7,25 +7,26 @@ import hbs from 'hbs';
 import { registerHandlebarsHelpers } from './helpers/handlebars.helpers';
 import { IResponseWithLayout } from './interfaces/IResponseWithLayout';
 import { NextFunction } from 'express';
+import { readFileSync } from 'node:fs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Настройка статических файлов
-  app.useStaticAssets(join(process.cwd(), '..', 'public'));
+  app.useStaticAssets(join(__dirname, '..', 'public'));
 
   // Настройка движка шаблонов
-  app.setBaseViewsDir(join(process.cwd(), '..', 'views'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
   // Регистрация папки с partials
-  hbs.registerPartials(join(process.cwd(), '..', 'views', 'partials'));
+  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
   // Регистрация хелперов
   registerHandlebarsHelpers();
 
   app.use((req: Request, res: IResponseWithLayout, next: NextFunction) => {
-    res.locals.layout = 'layouts/layout';
+    res.locals.layout = 'layouts/main';
     next();
   });
 

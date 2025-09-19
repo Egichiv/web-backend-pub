@@ -33,7 +33,7 @@
     <div class="posts-container">
       {{#if posts}}
         {{#each posts}}
-          {{> post-card this isAuthenticated=../isAuthenticated}}
+          {{> postCard this isAuthenticated=../isAuthenticated}}
         {{/each}}
       {{else}}
         <div class="empty-state">

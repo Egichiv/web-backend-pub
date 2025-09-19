@@ -93,7 +93,7 @@
     <div class="comments-container">
       {{#if comments}}
         {{#each comments}}
-          {{> comment-card this canDelete=(or ../isAuthenticated (eq this.author ../username))}}
+          {{> commentCard this canDelete=(or ../isAuthenticated (eq this.author ../username))}}
         {{/each}}
 
         <!-- Пагинация для комментариев -->

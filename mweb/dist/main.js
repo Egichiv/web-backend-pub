@@ -11,13 +11,13 @@ const hbs_1 = __importDefault(require("hbs"));
 const handlebars_helpers_1 = require("./helpers/handlebars.helpers");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.useStaticAssets((0, path_1.join)(process.cwd(), '..', 'public'));
-    app.setBaseViewsDir((0, path_1.join)(process.cwd(), '..', 'views'));
+    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'public'));
+    app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'views'));
     app.setViewEngine('hbs');
-    hbs_1.default.registerPartials((0, path_1.join)(process.cwd(), '..', 'views', 'partials'));
+    hbs_1.default.registerPartials((0, path_1.join)(__dirname, '..', 'views', 'partials'));
     (0, handlebars_helpers_1.registerHandlebarsHelpers)();
     app.use((req, res, next) => {
-        res.locals.layout = 'layouts/layout';
+        res.locals.layout = 'layouts/main';
         next();
     });
     app.set('view options', {

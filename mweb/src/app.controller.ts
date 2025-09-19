@@ -159,14 +159,14 @@ export class AppController {
   }
 
   // Страница добавления цитаты
-  @Get('add-quote')
-  @Render('add-quote')
+  @Get('addQuote')
+  @Render('addQuote')
   getAddQuotePage(@Query('auth') auth?: string) {
     const isAuthenticated = auth === 'true';
 
     return {
       title: 'Добавить цитату',
-      currentPage: 'add-quote',
+      currentPage: 'addQuote',
       isAuthenticated,
       username: isAuthenticated ? 'Администратор' : null,
       userQuotes: isAuthenticated
@@ -333,10 +333,10 @@ export class AppController {
   }
 
   @Post('quotes/create')
-  @Redirect('/add-quote')
+  @Redirect('/addQuote')
   createQuote(@Body() body: any) {
     console.log('Creating quote:', body);
-    return { url: '/add-quote?auth=true&success=quote_created' };
+    return { url: '/addQuote?auth=true&success=quote_created' };
   }
 
   @Post('comments/create')

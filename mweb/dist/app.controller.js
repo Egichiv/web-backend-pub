@@ -135,7 +135,7 @@ let AppController = class AppController {
         const isAuthenticated = auth === 'true';
         return {
             title: 'Добавить цитату',
-            currentPage: 'add-quote',
+            currentPage: 'addQuote',
             isAuthenticated,
             username: isAuthenticated ? 'Администратор' : null,
             userQuotes: isAuthenticated
@@ -264,7 +264,7 @@ let AppController = class AppController {
     }
     createQuote(body) {
         console.log('Creating quote:', body);
-        return { url: '/add-quote?auth=true&success=quote_created' };
+        return { url: '/addQuote?auth=true&success=quote_created' };
     }
     createComment(body) {
         console.log('Creating comment:', body);
@@ -294,8 +294,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getQuotesPage", null);
 __decorate([
-    (0, common_1.Get)('add-quote'),
-    (0, common_1.Render)('add-quote'),
+    (0, common_1.Get)('addQuote'),
+    (0, common_1.Render)('addQuote'),
     __param(0, (0, common_1.Query)('auth')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -351,7 +351,7 @@ __decorate([
 ], AppController.prototype, "createPost", null);
 __decorate([
     (0, common_1.Post)('quotes/create'),
-    (0, common_1.Redirect)('/add-quote'),
+    (0, common_1.Redirect)('/addQuote'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
