@@ -9,7 +9,7 @@
   </section>
 
   <section class="general-section">
-    <h2 class="section-title">📢 Новости и объявления от администрации</h2>
+    <h2 class="section-title">Новости и объявления от администрации</h2>
 
     {{#if isAuthenticated}}
       <!-- Форма добавления нового поста (только для админа) -->
@@ -45,9 +45,8 @@
 
   <!-- Секция с последними цитатами -->
   <section class="general-section">
-    <h2 class="section-title">✨ Последние добавленные цитаты</h2>
+    <h2 class="section-title">Последние добавленные цитаты</h2>
     <div class="new-quotes">
-      <img src="/images/icon.ico" alt="Цитаты" width="150" height="150" class="new-quotes__image">
       <div class="new-quotes__content">
         {{#if latestQuotes}}
           {{#each latestQuotes}}

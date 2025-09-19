@@ -65,7 +65,7 @@ export class AppController {
     @Query('page') page: string = '1',
   ) {
     const isAuthenticated = auth === 'true';
-    const currentPage = parseInt(page);
+    const currentPageNumber = parseInt(page);
 
     // Временные данные для тестирования
     const allQuotes = [
@@ -132,7 +132,7 @@ export class AppController {
 
     const itemsPerPage = 3;
     const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    const startIndex = (currentPageNumber - 1) * itemsPerPage;
     const paginatedQuotes = filteredQuotes.slice(
       startIndex,
       startIndex + itemsPerPage,
@@ -150,10 +150,11 @@ export class AppController {
       genreFilter: genre,
       sortBy: sort || 'date_desc',
       hasPagination: totalPages > 1,
-      hasPrevPage: currentPage > 1,
-      hasNextPage: currentPage < totalPages,
-      prevPage: currentPage - 1,
-      nextPage: currentPage + 1,
+      hasPrevPage: currentPageNumber > 1,
+      hasNextPage: currentPageNumber < totalPages,
+      prevPage: currentPageNumber - 1,
+      nextPage: currentPageNumber + 1,
+      currentPageNumber,
       totalPages,
     };
   }
@@ -190,7 +191,7 @@ export class AppController {
     @Query('page') page: string = '1',
   ) {
     const isAuthenticated = auth === 'true';
-    const currentPage = parseInt(page);
+    const currentPageNumber = parseInt(page);
 
     // Временные данные
     const allComments = [
@@ -222,7 +223,7 @@ export class AppController {
 
     const itemsPerPage = 3;
     const totalPages = Math.ceil(allComments.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    const startIndex = (currentPageNumber - 1) * itemsPerPage;
     const paginatedComments = allComments.slice(
       startIndex,
       startIndex + itemsPerPage,
@@ -242,10 +243,11 @@ export class AppController {
         totalComments: allComments.length,
       },
       hasPagination: totalPages > 1,
-      hasPrevPage: currentPage > 1,
-      hasNextPage: currentPage < totalPages,
-      prevPage: currentPage - 1,
-      nextPage: currentPage + 1,
+      hasPrevPage: currentPageNumber > 1,
+      hasNextPage: currentPageNumber < totalPages,
+      prevPage: currentPageNumber - 1,
+      nextPage: currentPageNumber + 1,
+      currentPageNumber,
       totalPages,
     };
   }

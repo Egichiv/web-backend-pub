@@ -40,6 +40,7 @@ export declare class AppController {
         hasNextPage: boolean;
         prevPage: number;
         nextPage: number;
+        currentPageNumber: number;
         totalPages: number;
     };
     getAddQuotePage(auth?: string): {
@@ -76,6 +77,7 @@ export declare class AppController {
         hasNextPage: boolean;
         prevPage: number;
         nextPage: number;
+        currentPageNumber: number;
         totalPages: number;
     };
     getMemesPage(auth?: string): {

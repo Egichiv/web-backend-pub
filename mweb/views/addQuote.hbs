@@ -1,7 +1,7 @@
 <!-- Страница добавления новой цитаты -->
 <div class="page-container">
   <section class="general-section">
-    <h1 class="page-title">➕ Добавить новую цитату</h1>
+    <h1 class="page-title">Добавить новую цитату</h1>
 
     {{#if successMessage}}
       <div class="alert alert-success">
@@ -62,13 +62,13 @@
           </div>
         {{else}}
           <div class="info-message">
-            ℹ️ Ваша цитата будет отправлена на модерацию перед публикацией
+            Ваша цитата будет отправлена на модерацию перед публикацией
           </div>
         {{/if}}
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary btn-large">
-            📝 Добавить цитату
+            Добавить цитату
           </button>
           <button type="reset" class="btn btn-secondary">
             Очистить форму
@@ -80,7 +80,7 @@
 
   <!-- Подсказки для пользователя -->
   <section class="general-section">
-    <h2 class="section-title">💡 Советы по добавлению цитат</h2>
+    <h2 class="section-title">Советы по добавлению цитат</h2>
     <div class="tips-container">
       <ul class="tips-list">
         <li>Убедитесь в правильности указания автора цитаты</li>
@@ -95,16 +95,16 @@
   <!-- Последние добавленные цитаты этим пользователем -->
   {{#if userQuotes}}
     <section class="general-section">
-      <h2 class="section-title">📋 Ваши последние цитаты</h2>
+      <h2 class="section-title">Ваши последние цитаты</h2>
       <div class="user-quotes-list">
         {{#each userQuotes}}
           <div class="mini-quote-card">
             <blockquote>"{{this.text}}"</blockquote>
             <cite>— {{this.author}}</cite>
             <span class="quote-status {{this.status}}">
-                            {{#if (eq this.status 'published')}}✅ Опубликовано{{/if}}
-              {{#if (eq this.status 'pending')}}⏳ На модерации{{/if}}
-              {{#if (eq this.status 'rejected')}}❌ Отклонено{{/if}}
+                            {{#if (eq this.status 'published')}}Опубликовано{{/if}}
+              {{#if (eq this.status 'pending')}}На модерации{{/if}}
+              {{#if (eq this.status 'rejected')}}Отклонено{{/if}}
                         </span>
           </div>
         {{/each}}

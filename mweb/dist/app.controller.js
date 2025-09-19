@@ -54,7 +54,7 @@ let AppController = class AppController {
     }
     getQuotesPage(auth, search, author, genre, sort, page = '1') {
         const isAuthenticated = auth === 'true';
-        const currentPage = parseInt(page);
+        const currentPageNumber = parseInt(page);
         const allQuotes = [
             {
                 id: 1,
@@ -110,7 +110,7 @@ let AppController = class AppController {
         }
         const itemsPerPage = 3;
         const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
+        const startIndex = (currentPageNumber - 1) * itemsPerPage;
         const paginatedQuotes = filteredQuotes.slice(startIndex, startIndex + itemsPerPage);
         return {
             title: 'Поиск цитат',
@@ -124,10 +124,11 @@ let AppController = class AppController {
             genreFilter: genre,
             sortBy: sort || 'date_desc',
             hasPagination: totalPages > 1,
-            hasPrevPage: currentPage > 1,
-            hasNextPage: currentPage < totalPages,
-            prevPage: currentPage - 1,
-            nextPage: currentPage + 1,
+            hasPrevPage: currentPageNumber > 1,
+            hasNextPage: currentPageNumber < totalPages,
+            prevPage: currentPageNumber - 1,
+            nextPage: currentPageNumber + 1,
+            currentPageNumber,
             totalPages,
         };
     }
@@ -152,7 +153,7 @@ let AppController = class AppController {
     }
     getAboutPage(auth, page = '1') {
         const isAuthenticated = auth === 'true';
-        const currentPage = parseInt(page);
+        const currentPageNumber = parseInt(page);
         const allComments = [
             {
                 id: 1,
@@ -181,7 +182,7 @@ let AppController = class AppController {
         ];
         const itemsPerPage = 3;
         const totalPages = Math.ceil(allComments.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage;
+        const startIndex = (currentPageNumber - 1) * itemsPerPage;
         const paginatedComments = allComments.slice(startIndex, startIndex + itemsPerPage);
         return {
             title: 'О сайте',
@@ -197,10 +198,11 @@ let AppController = class AppController {
                 totalComments: allComments.length,
             },
             hasPagination: totalPages > 1,
-            hasPrevPage: currentPage > 1,
-            hasNextPage: currentPage < totalPages,
-            prevPage: currentPage - 1,
-            nextPage: currentPage + 1,
+            hasPrevPage: currentPageNumber > 1,
+            hasNextPage: currentPageNumber < totalPages,
+            prevPage: currentPageNumber - 1,
+            nextPage: currentPageNumber + 1,
+            currentPageNumber,
             totalPages,
         };
     }

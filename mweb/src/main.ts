@@ -7,7 +7,6 @@ import hbs from 'hbs';
 import { registerHandlebarsHelpers } from './helpers/handlebars.helpers';
 import { IResponseWithLayout } from './interfaces/IResponseWithLayout';
 import { NextFunction } from 'express';
-import { readFileSync } from 'node:fs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

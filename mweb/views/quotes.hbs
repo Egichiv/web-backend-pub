@@ -1,7 +1,7 @@
 <!-- Страница поиска и просмотра цитат -->
 <div class="page-container">
   <section class="general-section">
-    <h1 class="page-title">🔍 Поиск цитат</h1>
+    <h1 class="page-title">Поиск цитат</h1>
 
     <!-- Форма поиска и фильтрации -->
     <div class="search-section">
@@ -49,7 +49,7 @@
         </div>
 
         <div class="search-buttons">
-          <button type="submit" class="btn btn-primary">🔍 Найти</button>
+          <button type="submit" class="btn btn-primary">Найти</button>
           <a href="/quotes" class="btn btn-secondary">Сбросить фильтры</a>
         </div>
       </form>
@@ -59,7 +59,7 @@
   <!-- Результаты поиска -->
   <section class="quotes-marks-section">
     <h2 class="quotes-marks-section__heading">
-      📚 Найдено цитат: {{quotesCount}}
+      Найдено цитат: {{quotesCount}}
     </h2>
 
     {{#if quotes}}
@@ -94,7 +94,7 @@
           {{/if}}
 
           <span class="pagination__info">
-                        Страница {{currentPage}} из {{totalPages}}
+                        Страница {{currentPageNumber}} из {{totalPages}}
                     </span>
 
           {{#if hasNextPage}}
