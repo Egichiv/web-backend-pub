@@ -1,0 +1,15 @@
+<!-- Карточка комментария -->
+<div class="comment-card">
+  <div class="comment-card__header">
+    <span class="comment-card__author">{{author}}</span>
+    <span class="comment-card__date">{{formatDate date}}</span>
+  </div>
+  <div class="comment-card__content">
+    <p class="comment-card__text">{{text}}</p>
+  </div>
+  {{#if canDelete}}
+    <div class="comment-card__actions">
+      <button class="comment-card__delete-btn" data-comment-id="{{id}}">Удалить</button>
+    </div>
+  {{/if}}
+</div>

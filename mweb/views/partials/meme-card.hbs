@@ -1,0 +1,14 @@
+<!-- Карточка с мемом -->
+<div class="meme-card">
+  <div class="meme-card__image-container">
+    <img src="{{url}}"
+         alt="{{#if alt}}{{alt}}{{else}}Мем #{{id}}{{/if}}"
+         class="meme-card__image"
+         loading="lazy">
+  </div>
+  {{#if caption}}
+    <div class="meme-card__caption">
+      <p>{{caption}}</p>
+    </div>
+  {{/if}}
+</div>

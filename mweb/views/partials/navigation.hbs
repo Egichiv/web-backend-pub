@@ -1,0 +1,22 @@
+<nav class="head__navigation">
+  <a href="/"
+     class="head__navigation__button {{#if (eq currentPage 'home')}}head__navigation__button_current{{/if}}">
+    Главная
+  </a>
+  <a href="/quotes"
+     class="head__navigation__button {{#if (eq currentPage 'quotes')}}head__navigation__button_current{{/if}}">
+    Поиск цитат
+  </a>
+  <a href="/add-quote"
+     class="head__navigation__button {{#if (eq currentPage 'add-quote')}}head__navigation__button_current{{/if}}">
+    Добавить цитату
+  </a>
+  <a href="/about"
+     class="head__navigation__button {{#if (eq currentPage 'about')}}head__navigation__button_current{{/if}}">
+    О сайте
+  </a>
+  <a href="/memes"
+     class="head__navigation__button {{#if (eq currentPage 'memes')}}head__navigation__button_current{{/if}}">
+    Мемы
+  </a>
+</nav>

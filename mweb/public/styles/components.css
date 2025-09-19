@@ -1,0 +1,405 @@
+/* --- СТИЛИ ДЛЯ ИНФОРМАЦИИ О СЕССИИ --- */
+.user-session-info {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.user-session-info__authenticated,
+.user-session-info__guest {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    justify-content: center;
+}
+
+.user-session-info__greeting,
+.user-session-info__guest-text {
+    color: white;
+    font-size: 16px;
+}
+
+.user-session-info__logout-btn,
+.user-session-info__login-btn {
+    padding: 8px 16px;
+    background-color: #A62103;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.user-session-info__logout-btn:hover,
+.user-session-info__login-btn:hover {
+    background-color: #F25C05;
+}
+
+/* --- СТИЛИ ДЛЯ КАРТОЧКИ ПОСТА --- */
+.post-card {
+    background-color: white;
+    border: 2px solid #F29F05;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.post-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #F2C84B;
+    padding-bottom: 10px;
+}
+
+.post-card__title {
+    color: #A62103;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.post-card__id {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.post-card__text {
+    color: #333;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.post-card__admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #F2C84B;
+}
+
+.post-card__edit-btn,
+.post-card__delete-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.post-card__edit-btn {
+    background-color: #F29F05;
+    color: white;
+}
+
+.post-card__delete-btn {
+    background-color: #A62103;
+    color: white;
+}
+
+/* --- СТИЛИ ДЛЯ ТАБЛИЦЫ ЦИТАТ --- */
+.quotes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.quotes-table th {
+    background-color: #F29F05;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.quote-row {
+    border-bottom: 1px solid #F2C84B;
+}
+
+.quote-row:hover {
+    background-color: #FFF5E1;
+}
+
+.quote-row td {
+    padding: 12px;
+    color: #333;
+}
+
+.quote-row__id {
+    font-weight: bold;
+    color: #A62103;
+}
+
+.quote-row__author {
+    font-style: italic;
+    color: #F25C05;
+}
+
+.quote-row__text {
+    max-width: 400px;
+    line-height: 1.4;
+}
+
+.quote-genre {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.quote-genre--smart {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.quote-genre--motivating {
+    background-color: #FF9800;
+    color: white;
+}
+
+.quote-genre--realistic {
+    background-color: #2196F3;
+    color: white;
+}
+
+.quote-genre--funny {
+    background-color: #E91E63;
+    color: white;
+}
+
+.quote-row__actions {
+    white-space: nowrap;
+}
+
+.quote-row__edit-btn,
+.quote-row__delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 4px;
+    transition: transform 0.2s;
+}
+
+.quote-row__edit-btn:hover,
+.quote-row__delete-btn:hover {
+    transform: scale(1.2);
+}
+
+/* --- СТИЛИ ДЛЯ КАРТОЧКИ КОММЕНТАРИЯ --- */
+.comment-card {
+    background-color: white;
+    border-left: 4px solid #F29F05;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-card__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #F2C84B;
+}
+
+.comment-card__author {
+    font-weight: bold;
+    color: #A62103;
+    font-size: 1.1rem;
+}
+
+.comment-card__date {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.comment-card__text {
+    color: #333;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+.comment-card__actions {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F2C84B;
+}
+
+.comment-card__delete-btn {
+    padding: 5px 10px;
+    background-color: #A62103;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.comment-card__delete-btn:hover {
+    background-color: #F25C05;
+}
+
+/* --- СТИЛИ ДЛЯ КАРТОЧКИ МЕМА --- */
+.meme-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    display: inline-block;
+    margin: 10px;
+}
+
+.meme-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.meme-card__image-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.meme-card__image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.meme-card__caption {
+    padding: 10px;
+    background-color: #F2C84B;
+    color: #A62103;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* --- СТИЛИ ДЛЯ ФУТЕРА --- */
+.footer {
+    background-color: #F29F05;
+    color: white;
+    padding: 40px 20px 20px;
+    margin-top: 40px;
+}
+
+.footer__content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer__section {
+    flex: 1;
+    min-width: 200px;
+    margin: 10px;
+}
+
+.footer__title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.footer__subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.footer__description,
+.footer__info {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+}
+
+.footer__links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer__links li {
+    margin: 5px 0;
+}
+
+.footer__links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer__links a:hover {
+    color: #F2C84B;
+    text-decoration: underline;
+}
+
+.footer__load-time {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- АДАПТИВНОСТЬ --- */
+@media (max-width: 768px) {
+    .footer__content {
+        flex-direction: column;
+    }
+
+    .user-session-info {
+        font-size: 14px;
+    }
+
+    .post-card__title {
+        font-size: 1.2rem;
+    }
+
+    .quotes-table {
+        font-size: 0.9rem;
+    }
+
+    .meme-card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .user-session-info__authenticated,
+    .user-session-info__guest {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .quotes-table {
+        font-size: 0.8rem;
+    }
+
+    .quote-row__text {
+        max-width: 200px;
+    }
+
+    .meme-card {
+        width: calc(100% - 20px);
+    }
+}

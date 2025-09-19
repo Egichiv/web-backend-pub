@@ -1,0 +1,120 @@
+<!-- Страница с мемами -->
+<div class="page-container">
+  <section class="flashy-section">
+    <h1 class="flashy-section__heading">😂 Галерея мемов</h1>
+    <p class="flashy-section__paragraph">
+      Потому что иногда нужно просто посмеяться!
+      Здесь собрана наша коллекция лучших мемов для поднятия настроения.
+    </p>
+  </section>
+
+  {{#if isAuthenticated}}
+    <!-- Панель администратора для загрузки мемов -->
+    <section class="general-section admin-section">
+      <h2 class="section-title">🔧 Управление мемами</h2>
+      <div class="admin-info">
+        <p>ℹ️ Как администратор, вы можете управлять мемами через панель управления.</p>
+        <p>Загрузка новых мемов происходит через серверную часть.</p>
+      </div>
+    </section>
+  {{/if}}
+
+  <!-- Фильтры и сортировка -->
+  <section class="general-section">
+    <div class="memes-controls">
+      <div class="view-toggle">
+        <label>Вид отображения:</label>
+        <button class="btn btn-small" onclick="toggleView('grid')">🔲 Сетка</button>
+        <button class="btn btn-small" onclick="toggleView('list')">📋 Список</button>
+      </div>
+
+      <div class="size-toggle">
+        <label>Размер:</label>
+        <button class="btn btn-small" onclick="changeSize('small')">S</button>
+        <button class="btn btn-small" onclick="changeSize('medium')">M</button>
+        <button class="btn btn-small" onclick="changeSize('large')">L</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Галерея мемов -->
+  <section class="general-section">
+    <h2 class="section-title">🎨 Коллекция мемов</h2>
+
+    {{#if memes}}
+      <div class="memes-gallery" id="memesGallery">
+        {{#each memes}}
+          {{> meme-card this}}
+        {{/each}}
+      </div>
+
+      <!-- Кнопка "Загрузить еще" для ленивой загрузки -->
+      {{#if hasMore}}
+        <div class="load-more-container">
+          <button class="btn btn-primary btn-large" onclick="loadMoreMemes()">
+            📥 Загрузить еще мемы
+          </button>
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="empty-state">
+        <div class="empty-state__icon">😔</div>
+        <h3>Упс! Мемов пока нет</h3>
+        <p>Но скоро здесь появится много смешного контента!</p>
+        {{#if isAuthenticated}}
+          <p class="admin-hint">💡 Администратор может добавить мемы через серверную панель</p>
+        {{/if}}
+      </div>
+    {{/if}}
+  </section>
+
+  <!-- Информационная секция -->
+  <section class="general-section">
+    <h2 class="section-title">ℹ️ О разделе "Мемы"</h2>
+    <div class="info-content">
+      <p>
+        Этот раздел создан для того, чтобы разбавить серьезные цитаты
+        порцией хорошего настроения. Все мемы тщательно отобраны администрацией сайта.
+      </p>
+      <div class="meme-stats">
+        <div class="stat-item">
+          <span class="stat-emoji">🖼️</span>
+          <span class="stat-text">Всего мемов: <strong>{{memesCount}}</strong></span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-emoji">👁️</span>
+          <span class="stat-text">Просмотров: <strong>{{viewsCount}}</strong></span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-emoji">🆕</span>
+          <span class="stat-text">Последнее обновление: <strong>{{lastUpdate}}</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Скрипт для управления отображением мемов -->
+<script>
+  function toggleView(viewType) {
+    const gallery = document.getElementById('memesGallery');
+    if (viewType === 'grid') {
+      gallery.classList.remove('memes-list');
+      gallery.classList.add('memes-grid');
+    } else {
+      gallery.classList.remove('memes-grid');
+      gallery.classList.add('memes-list');
+    }
+  }
+
+  function changeSize(size) {
+    const gallery = document.getElementById('memesGallery');
+    gallery.classList.remove('size-small', 'size-medium', 'size-large');
+    gallery.classList.add(`size-${size}`);
+  }
+
+  function loadMoreMemes() {
+    // Это будет реализовано в JavaScript для динамической подгрузки
+    console.log('Loading more memes...');
+  }
+</script>

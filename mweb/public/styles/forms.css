@@ -1,0 +1,380 @@
+/* --- СТИЛИ ДЛЯ ФОРМ --- */
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #A62103;
+    font-weight: bold;
+}
+
+.form-group label.required::after {
+    content: ' *';
+    color: #F25C05;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #F29F05;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #F25C05;
+    box-shadow: 0 0 5px rgba(242, 92, 5, 0.3);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* --- КНОПКИ --- */
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #F29F05;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #F25C05;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: #A62103;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #8B1A00;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.btn-large {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+}
+
+/* --- АЛЕРТЫ --- */
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #45a049;
+}
+
+.alert-error {
+    background-color: #f44336;
+    color: white;
+    border: 1px solid #da190b;
+}
+
+.alert-info {
+    background-color: #2196F3;
+    color: white;
+    border: 1px solid #0b7dda;
+}
+
+/* --- ТАБЛИЦЫ --- */
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* --- ПАГИНАЦИЯ --- */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.pagination__link {
+    padding: 8px 16px;
+    background-color: #F29F05;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.pagination__link:hover {
+    background-color: #F25C05;
+}
+
+.pagination__info {
+    color: #666;
+    font-weight: bold;
+}
+
+/* --- ПОИСК И ФИЛЬТРЫ --- */
+
+.search-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.search-form {
+    width: 100%;
+}
+
+.filters-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* --- ПУСТОЕ СОСТОЯНИЕ --- */
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.empty-state__icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+/* --- СТРАНИЦА АВТОРИЗАЦИИ --- */
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.auth-section {
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-title {
+    color: #A62103;
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.auth-form .form-input--large {
+    font-size: 18px;
+    padding: 12px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-links a {
+    color: #F29F05;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* --- ГАЛЕРЕЯ МЕМОВ --- */
+
+.memes-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.memes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.memes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.memes-controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.view-toggle,
+.size-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Размеры для галереи */
+.size-small .meme-card {
+    max-width: 200px;
+}
+
+.size-medium .meme-card {
+    max-width: 300px;
+}
+
+.size-large .meme-card {
+    max-width: 400px;
+}
+
+.load-more-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* --- СТАТИСТИКА --- */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 2rem;
+    color: #F29F05;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #666;
+    margin-top: 5px;
+}
+
+/* --- ДОПОЛНИТЕЛЬНЫЕ КЛАССЫ --- */
+
+.text-center {
+    text-align: center;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-title {
+    color: #A62103;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.section-title {
+    color: #A62103;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.admin-panel {
+    background-color: #FFF5E1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px dashed #F29F05;
+}

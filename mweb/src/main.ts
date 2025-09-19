@@ -3,23 +3,43 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { exec } from 'node:child_process';
-import * as hbs from 'hbs';
+import hbs from 'hbs';
+import { registerHandlebarsHelpers } from './helpers/handlebars.helpers';
+import { IResponseWithLayout } from './interfaces/IResponseWithLayout';
+import { NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  // Настройка статических файлов
+  app.useStaticAssets(join(process.cwd(), '..', 'public'));
+
+  // Настройка движка шаблонов
+  app.setBaseViewsDir(join(process.cwd(), '..', 'views'));
   app.setViewEngine('hbs');
-  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
+  // Регистрация папки с partials
+  hbs.registerPartials(join(process.cwd(), '..', 'views', 'partials'));
+
+  // Регистрация хелперов
+  registerHandlebarsHelpers();
+
+  app.use((req: Request, res: IResponseWithLayout, next: NextFunction) => {
+    res.locals.layout = 'layouts/layout';
+    next();
+  });
+
+  app.set('view options', {
+    extension: 'hbs',
+    map: { html: 'hbs' },
+  });
+
+  // Получение конфигурации
   const config = app.get(ConfigService);
-
   const port = Number(config.get('PORT')) || 3000;
-  await app.listen(port);
 
+  await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);
-  exec(`open http://localhost:${port}`);
 }
+
 bootstrap();

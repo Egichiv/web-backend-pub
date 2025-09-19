@@ -1,0 +1,16 @@
+<!-- Карточка поста от админа -->
+<article class="post-card">
+  <div class="post-card__header">
+    <h3 class="post-card__title">{{title}}</h3>
+    <span class="post-card__id">#{{id}}</span>
+  </div>
+  <div class="post-card__content">
+    <p class="post-card__text">{{text}}</p>
+  </div>
+  {{#if isAuthenticated}}
+    <div class="post-card__admin-actions">
+      <button class="post-card__edit-btn" data-post-id="{{id}}">Редактировать</button>
+      <button class="post-card__delete-btn" data-post-id="{{id}}">Удалить</button>
+    </div>
+  {{/if}}
+</article>

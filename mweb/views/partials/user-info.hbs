@@ -1,0 +1,23 @@
+<div class="user-session-info">
+  {{#if isAuthenticated}}
+    <!-- Состояние: пользователь авторизован -->
+    <div class="user-session-info__authenticated">
+            <span class="user-session-info__greeting">
+                Привет, <strong>{{username}}</strong>!
+            </span>
+      <a href="/logout" class="user-session-info__logout-btn">
+        Выйти
+      </a>
+    </div>
+  {{else}}
+    <!-- Состояние: пользователь не авторизован -->
+    <div class="user-session-info__guest">
+            <span class="user-session-info__guest-text">
+                Вы не авторизованы
+            </span>
+      <a href="/login" class="user-session-info__login-btn">
+        Войти
+      </a>
+    </div>
+  {{/if}}
+</div>

@@ -1,0 +1,113 @@
+<!-- Страница поиска и просмотра цитат -->
+<div class="page-container">
+  <section class="general-section">
+    <h1 class="page-title">🔍 Поиск цитат</h1>
+
+    <!-- Форма поиска и фильтрации -->
+    <div class="search-section">
+      <form action="/quotes" method="GET" class="search-form">
+        <div class="filters-container">
+          <div class="form-group">
+            <label for="searchText">Поиск по тексту:</label>
+            <input type="text"
+                   id="searchText"
+                   name="search"
+                   value="{{searchQuery}}"
+                   placeholder="Введите текст для поиска..."
+                   class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="authorFilter">Автор:</label>
+            <input type="text"
+                   id="authorFilter"
+                   name="author"
+                   value="{{authorFilter}}"
+                   placeholder="Имя автора..."
+                   class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="genreFilter">Жанр:</label>
+            <select id="genreFilter" name="genre" class="form-select">
+              <option value="">Все жанры</option>
+              <option value="smart" {{#if (eq genreFilter 'smart')}}selected{{/if}}>Умная</option>
+              <option value="motivating" {{#if (eq genreFilter 'motivating')}}selected{{/if}}>Мотивирующая</option>
+              <option value="realistic" {{#if (eq genreFilter 'realistic')}}selected{{/if}}>Реалистичная</option>
+              <option value="funny" {{#if (eq genreFilter 'funny')}}selected{{/if}}>Смешная</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sortBy">Сортировка:</label>
+            <select id="sortBy" name="sort" class="form-select">
+              <option value="date_desc" {{#if (eq sortBy 'date_desc')}}selected{{/if}}>Сначала новые</option>
+              <option value="date_asc" {{#if (eq sortBy 'date_asc')}}selected{{/if}}>Сначала старые</option>
+              <option value="author" {{#if (eq sortBy 'author')}}selected{{/if}}>По автору</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="search-buttons">
+          <button type="submit" class="btn btn-primary">🔍 Найти</button>
+          <a href="/quotes" class="btn btn-secondary">Сбросить фильтры</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Результаты поиска -->
+  <section class="quotes-marks-section">
+    <h2 class="quotes-marks-section__heading">
+      📚 Найдено цитат: {{quotesCount}}
+    </h2>
+
+    {{#if quotes}}
+      <div class="table-container">
+        <table class="quotes-table quotes-marks-section__table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Автор</th>
+            <th>Цитата</th>
+            <th>Жанр</th>
+            <th>Дата добавления</th>
+            {{#if isAuthenticated}}
+              <th>Действия</th>
+            {{/if}}
+          </tr>
+          </thead>
+          <tbody>
+          {{#each quotes}}
+            {{> quote-row this isAuthenticated=../isAuthenticated}}
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Пагинация -->
+      {{#if hasPagination}}
+        <div class="pagination">
+          {{#if hasPrevPage}}
+            <a href="/quotes?page={{prevPage}}&search={{searchQuery}}&author={{authorFilter}}&genre={{genreFilter}}&sort={{sortBy}}"
+            class="pagination__link">← Предыдущая</a>
+          {{/if}}
+
+          <span class="pagination__info">
+                        Страница {{currentPage}} из {{totalPages}}
+                    </span>
+
+          {{#if hasNextPage}}
+            <a href="/quotes?page={{nextPage}}&search={{searchQuery}}&author={{authorFilter}}&genre={{genreFilter}}&sort={{sortBy}}"
+            class="pagination__link">Следующая →</a>
+          {{/if}}
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="empty-state">
+        <p>По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.</p>
+        <a href="/add-quote" class="btn btn-primary">Добавить первую цитату</a>
+      </div>
+    {{/if}}
+  </section>
+</div>

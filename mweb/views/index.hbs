@@ -1,10 +1,68 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>App</title>
-</head>
-<body>
-{{ message }}
-</body>
-</html>
+<!-- Главная страница с постами от админа -->
+<div class="page-container">
+  <section class="flashy-section">
+    <h2 class="flashy-section__heading">Добро пожаловать на сайт САМЫХ КРУТЫХ ЦИТАТ!</h2>
+    <p class="flashy-section__paragraph">
+      Здесь собраны самые вдохновляющие, умные, мотивирующие и смешные цитаты со всего мира.
+      Погрузитесь в мир мудрости и юмора вместе с нами!
+    </p>
+  </section>
+
+  <section class="general-section">
+    <h2 class="section-title">📢 Новости и объявления от администрации</h2>
+
+    {{#if isAuthenticated}}
+      <!-- Форма добавления нового поста (только для админа) -->
+      <div class="admin-panel">
+        <h3>Добавить новый пост</h3>
+        <form action="/posts/create" method="POST" class="post-form">
+          <div class="form-group">
+            <label for="postTitle">Заголовок поста:</label>
+            <input type="text" id="postTitle" name="title" required class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="postText">Текст поста:</label>
+            <textarea id="postText" name="text" rows="4" required class="form-textarea"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Опубликовать</button>
+        </form>
+      </div>
+    {{/if}}
+
+    <!-- Список постов -->
+    <div class="posts-container">
+      {{#if posts}}
+        {{#each posts}}
+          {{> post-card this isAuthenticated=../isAuthenticated}}
+        {{/each}}
+      {{else}}
+        <div class="empty-state">
+          <p>Пока нет ни одного поста. Заходите позже!</p>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <!-- Секция с последними цитатами -->
+  <section class="general-section">
+    <h2 class="section-title">✨ Последние добавленные цитаты</h2>
+    <div class="new-quotes">
+      <img src="/images/icon.ico" alt="Цитаты" width="150" height="150" class="new-quotes__image">
+      <div class="new-quotes__content">
+        {{#if latestQuotes}}
+          {{#each latestQuotes}}
+            <blockquote class="new-quotes__quote">
+              "{{this.text}}"
+              <footer>— {{this.author}}</footer>
+            </blockquote>
+          {{/each}}
+        {{else}}
+          <p>Скоро здесь появятся новые цитаты!</p>
+        {{/if}}
+      </div>
+    </div>
+    <div class="text-center">
+      <a href="/quotes" class="btn btn-secondary">Посмотреть все цитаты →</a>
+    </div>
+  </section>
+</div>
