@@ -1,6 +1,5 @@
 <div class="user-session-info">
   {{#if isAuthenticated}}
-    <!-- Состояние: пользователь авторизован -->
     <div class="user-session-info__authenticated">
             <span class="user-session-info__greeting">
                 Привет, <strong>{{username}}</strong>!
@@ -10,7 +9,6 @@
       </a>
     </div>
   {{else}}
-    <!-- Состояние: пользователь не авторизован -->
     <div class="user-session-info__guest">
             <span class="user-session-info__guest-text">
                 Вы не авторизованы

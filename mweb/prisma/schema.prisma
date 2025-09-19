@@ -7,3 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Genre {
+  SMART
+  MOTIVATING
+  REALISTIC
+  FUNNY
+
+  @@map("quote_genre")
+}
+
+model User {
+  id       Int    @id @default(autoincrement()) @map("user_id")
+  nickname String @unique
+  password String
+
+  comments Comment[]
+  quotes   Quote[]
+  memes    Meme[]
+  posts    Post[]
+
+  @@map("users")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement()) @map("comment_id")
+  text       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Quote {
+  id         Int      @id @default(autoincrement()) @map("quote_id")
+  author     String
+  text       String
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+  genre      Genre
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("quotes")
+}
+
+model Meme {
+  id   Int    @id @default(autoincrement()) @map("meme_id")
+  link String
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("memes")
+}
+
+model Post {
+  id      Int    @id @default(autoincrement()) @map("post_id")
+  heading String
+  text    String
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("posts")
+}

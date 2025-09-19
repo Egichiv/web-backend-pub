@@ -3,7 +3,7 @@
   <section class="auth-section">
     <div class="auth-container">
       <div class="auth-header">
-        <h1 class="auth-title"> Вход в систему</h1>
+        <h1 class="auth-title">Вход в систему</h1>
         <p class="auth-subtitle">Войдите, чтобы получить доступ ко всем возможностям сайта</p>
       </div>
 
@@ -41,3 +41,97 @@
                  required
                  placeholder="Введите ваш пароль"
                  maxlength="100"
+                 class="form-input form-input--large">
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="remember" value="1">
+            Запомнить меня
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-large">
+            Войти
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            Очистить
+          </button>
+        </div>
+
+        <!-- Скрытое поле для редиректа после входа -->
+        {{#if redirectUrl}}
+          <input type="hidden" name="redirect" value="{{redirectUrl}}">
+        {{/if}}
+      </form>
+
+      <!-- Дополнительные ссылки -->
+      <div class="auth-links">
+        <p>
+          <a href="/forgot-password">Забыли пароль?</a>
+        </p>
+        <p>
+          Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+        </p>
+      </div>
+
+      <!-- Информация для тестирования -->
+      <div class="test-info">
+        <div class="alert alert-info">
+          <strong>ℹДля тестирования:</strong><br>
+          Логин: <code>admin</code><br>
+          Пароль: <code>admin</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Информационная секция -->
+  <section class="general-section">
+    <h2 class="section-title">Зачем нужна авторизация?</h2>
+    <div class="info-content">
+      <p>После авторизации вам станут доступны следующие возможности:</p>
+      <ul class="features-list">
+        <li>Добавление новых цитат без модерации</li>
+        <li>Возможность оставлять комментарии от своего имени</li>
+        <li>Управление своими цитатами и комментариями</li>
+        <li>Добавление цитат в избранное (скоро)</li>
+        <li>Доступ к персональной статистике (скоро)</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Дополнительные стили для страницы логина */
+  .test-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-radius: 5px;
+  }
+
+  .test-info code {
+    background-color: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-weight: bold;
+  }
+
+  .features-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .features-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f2c84b;
+  }
+
+  .features-list li:last-child {
+    border-bottom: none;
+  }
+</style>

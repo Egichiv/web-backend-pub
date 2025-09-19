@@ -11,17 +11,13 @@ import { NextFunction } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Настройка статических файлов
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
-  // Настройка движка шаблонов
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  // Регистрация папки с partials
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
-  // Регистрация хелперов
   registerHandlebarsHelpers();
 
   app.use((req: Request, res: IResponseWithLayout, next: NextFunction) => {
@@ -34,7 +30,6 @@ async function bootstrap() {
     map: { html: 'hbs' },
   });
 
-  // Получение конфигурации
   const config = app.get(ConfigService);
   const port = Number(config.get('PORT')) || 3000;
 

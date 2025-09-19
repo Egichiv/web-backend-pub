@@ -1,0 +1,42 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class comments {
+   text: text
+   created_at: timestamp(3)
+   user_id: integer
+   comment_id: integer
+}
+class memes {
+   link: text
+   user_id: integer
+   meme_id: integer
+}
+class posts {
+   heading: text
+   text: text
+   user_id: integer
+   post_id: integer
+}
+class quotes {
+   author: text
+   text: text
+   uploaded_at: timestamp(3)
+   genre: quote_genre
+   user_id: integer
+   quote_id: integer
+}
+class users {
+   nickname: text
+   password: text
+   user_id: integer
+}
+
+comments  -[#595959,plain]-^  users    : "user_id"
+memes     -[#595959,plain]-^  users    : "user_id"
+posts     -[#595959,plain]-^  users    : "user_id"
+quotes    -[#595959,plain]-^  users    : "user_id"
+@enduml
