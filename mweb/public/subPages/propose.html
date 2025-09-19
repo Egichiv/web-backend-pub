@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ПРЕДЛОЖИТЬ ЦИТАТУ</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <script src="../scripts/scripts.js" defer></script>
+  <script src="../scripts/tableGenerator.js" defer></script>
+</head>
+
+<body>
+<header class="head">
+  <nav class="head__navigation">
+      <a class="head__navigation__button" href="search.html">ПОИСК ЦИТАТ</a>
+      <a class="head__navigation__button head__navigation__button_current" href="propose.html">ПРЕДЛОЖИТЬ ЦИТАТУ</a>
+      <a class="head__navigation__button" href="about.html">О САЙТЕ</a>
+      <a class="head__navigation__button" href="memes.html">МЕМЫ</a>
+      <a class="head__navigation__button" href="../index.html">НА ГЛАВНУЮ</a>
+  </nav>
+</header>
+
+<main class="secondary-main">
+  <h1>ПРЕДЛОЖИТЬ ЦИТАТУ</h1>
+  <h2>(Создать форму таблицы, чтоб потом отправить на email)</h2>
+  <form class="regular-form" id="tableForm">
+    <fieldset class="regular-form__fieldset">
+      <legend class="regular-form__fieldset__legend">Настройки таблицы</legend>
+
+      <label class="regular-form__fieldset__label">
+        <input class="regular-form__fieldset__label__input" type="checkbox" id="authorColumn">
+        Добавить колонку "Автор"
+      </label>
+      <label class="regular-form__fieldset__label">
+        <input class="regular-form__fieldset__label__input" type="checkbox" id="yearColumn">
+        Добавить колонку "Год"
+      </label>
+      <label class="regular-form__fieldset__label">
+        <input class="regular-form__fieldset__label__input" type="checkbox" id="ratingColumn">
+        Добавить колонку "Оценка"
+      </label>
+      <label class="regular-form__fieldset__label" for="rows">Количество цитат:</label>
+      <input class="regular-form__fieldset__input" type="number" id="rows" name="rows" min="1" required>
+
+      <button class="regular-form__fieldset__button" type="submit">Создать таблицу</button>
+    </fieldset>
+  </form>
+
+  <div id="tableContainer"></div>
+</main>
+
+<footer>
+</footer>
+</body>
+
+</html>

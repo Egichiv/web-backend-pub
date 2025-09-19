@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ВИДЖЕТ КОНВЕРТЕРА ВАЛЮТ</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/converterStyles.css">
+    <script src="../scripts/scripts.js" defer></script>
+    <script src="../scripts/converter.js" defer></script>
+</head>
+
+<body>
+<header class="head">
+    <nav class="head__navigation">
+        <a class="head__navigation__button head__navigation__button_current" href="search.html">ВИДЖЕТ КОНВЕРТЕРА ВАЛЮТ</a>
+        <a class="head__navigation__button" href="propose.html">ПРЕДЛОЖИТЬ ЦИТАТУ</a>
+        <a class="head__navigation__button" href="about.html">О САЙТЕ</a>
+        <a class="head__navigation__button" href="memes.html">МЕМЫ</a>
+        <a class="head__navigation__button" href="../index.html">НА ГЛАВНУЮ</a>
+    </nav>
+</header>
+
+<main class="secondary-main">
+    <h1>ВИДЖЕТ КОНВЕРТЕРА ВАЛЮТ</h1>
+    <div class="converter">
+        <input type="number" id="amount" class="converter__input" value="1" min="0">
+        <select id="currency" class="converter__select">
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+            <option value="BNB">BNB</option>
+        </select>
+        <div id="result" class="converter__result">Ждем-с...</div>
+    </div>
+</main>
+
+<footer>
+</footer>
+</body>
+
+</html>

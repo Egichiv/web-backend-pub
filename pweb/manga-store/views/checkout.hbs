@@ -1,0 +1,226 @@
+<div class="checkout-page">
+  <h1 class="page-title">Оформление заказа</h1>
+
+  <div class="checkout-progress">
+    <div class="progress-step active">
+      <div class="step-number">1</div>
+      <span>Контакты</span>
+    </div>
+    <div class="progress-step active">
+      <div class="step-number">2</div>
+      <span>Доставка</span>
+    </div>
+    <div class="progress-step">
+      <div class="step-number">3</div>
+      <span>Оплата</span>
+    </div>
+  </div>
+
+  <div class="checkout-content">
+    <div class="checkout-form-section">
+      <form class="checkout-form" id="checkoutForm">
+        <div class="form-section">
+          <h3>1. Контактная информация</h3>
+          {{#if user}}
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" value="{{user.email}}" readonly>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Имя:</label>
+                <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Фамилия:</label>
+                <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>
+              </div>
+            </div>
+          {{else}}
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required placeholder="your@email.com">
+              <small class="form-hint">На этот email придет подтверждение заказа</small>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Имя:</label>
+                <input type="text" id="firstName" name="firstName" required placeholder="Ваше имя">
+              </div>
+              <div class="form-group">
+                <label for="lastName">Фамилия:</label>
+                <input type="text" id="lastName" name="lastName" required placeholder="Ваша фамилия">
+              </div>
+            </div>
+          {{/if}}
+          <div class="form-group">
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-__-__" required>
+            <small class="form-hint">Курьер свяжется с вами по этому номеру</small>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>2. Адрес доставки</h3>
+          <div class="form-group">
+            <label for="city">Город:</label>
+            <input type="text" id="city" name="city" required placeholder="Ваш город">
+          </div>
+          <div class="form-group">
+            <label for="address">Адрес:</label>
+            <textarea id="address" name="address" rows="3" placeholder="Улица, дом, квартира" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="postalCode">Почтовый индекс:</label>
+              <input type="text" id="postalCode" name="postalCode" placeholder="123456">
+            </div>
+            <div class="form-group">
+              <label for="floor">Этаж:</label>
+              <input type="text" id="floor" name="floor" placeholder="Необязательно">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>3. Способ оплаты</h3>
+          <div class="payment-methods">
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="card" checked>
+              <div class="payment-card">
+                <div class="payment-icon">
+                  <i class="fab fa-cc-visa"></i>
+                  <i class="fab fa-cc-mastercard"></i>
+                </div>
+                <div class="payment-info">
+                  <h4>Банковская карта</h4>
+                  <p>Visa, Mastercard, Мир</p>
+                </div>
+              </div>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="cash">
+              <div class="payment-card">
+                <div class="payment-icon">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="payment-info">
+                  <h4>Наличными при получении</h4>
+                  <p>Оплата курьеру</p>
+                </div>
+              </div>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="sbp">
+              <div class="payment-card">
+                <div class="payment-icon">
+                  <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="payment-info">
+                  <h4>СБП (QR-код)</h4>
+                  <p>Быстрая оплата по QR</p>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>4. Комментарий к заказу</h3>
+          <div class="form-group">
+            <label for="notes">Дополнительная информация:</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Особые пожелания к доставке, комментарии..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="window.location.href='/cart'">
+            <i class="fas fa-arrow-left"></i>
+            Вернуться в корзину
+          </button>
+          <button type="submit" class="btn btn-primary btn-large">
+            <span class="btn-text">Оформить заказ</span>
+            <div class="btn-spinner" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="order-summary">
+      <div class="summary-card">
+        <h3>Ваш заказ</h3>
+
+        <div class="order-items" id="orderItems">
+          <div class="summary-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Загрузка...</span>
+          </div>
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-line">
+            <span>Товары:</span>
+            <span id="itemsTotal">0 ₽</span>
+          </div>
+          <div class="summary-line">
+            <span>Доставка:</span>
+            <span id="shippingCost">Рассчитывается</span>
+          </div>
+          <div class="summary-line total">
+            <span>Итого:</span>
+            <span id="totalAmount">0 ₽</span>
+          </div>
+        </div>
+
+        <div class="delivery-estimate" id="deliveryEstimate">
+          <div class="estimate-item">
+            <i class="fas fa-truck"></i>
+            <span>Доставка: <strong>1-3 рабочих дня</strong></span>
+          </div>
+          <div class="estimate-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Гарантия возврата 14 дней</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="coupon-section">
+        <div class="coupon-card">
+          <h4>Есть промокод?</h4>
+          <div class="coupon-input">
+            <input type="text" id="couponCode" placeholder="Введите промокод">
+            <button type="button" class="btn btn-outline" id="applyCouponBtn">
+              Применить
+            </button>
+          </div>
+          <div class="coupon-result" id="couponResult" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="successModal" style="display: none;">
+    <div class="modal-content success-modal">
+      <div class="modal-body">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>Заказ успешно оформлен!</h3>
+        <p>Номер заказа: <strong id="orderNumber"></strong></p>
+        <p>На ваш email отправлено подтверждение</p>
+        <div class="success-actions">
+          <button class="btn btn-primary" id="goToOrderDetailsBtn">
+            Посмотреть заказ
+          </button>
+          <button class="btn btn-outline" id="continueShoppingBtn">
+            Продолжить покупки
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
