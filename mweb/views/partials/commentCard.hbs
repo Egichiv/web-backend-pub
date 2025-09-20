@@ -8,7 +8,6 @@
   </div>
   {{#if canDelete}}
     <div class="comment-card__actions">
-      <a href="/comments/{{id}}/edit" class="btn btn-small btn-secondary">Изменить</a>
       <form method="post" action="/comments/{{id}}" style="display: inline;">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-small btn-danger"

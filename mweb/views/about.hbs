@@ -8,6 +8,30 @@
     </p>
   </section>
 
+  {{#if stats}}
+    <section class="general-section">
+      <h2 class="section-title">Статистика сайта</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{stats.totalQuotes}}</div>
+          <div class="stat-label">Цитат</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{stats.totalAuthors}}</div>
+          <div class="stat-label">Авторов</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{stats.totalUsers}}</div>
+          <div class="stat-label">Пользователей</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{stats.totalComments}}</div>
+          <div class="stat-label">Комментариев</div>
+        </div>
+      </div>
+    </section>
+  {{/if}}
+
   <section class="general-section">
     <h2 class="section-title">Наша миссия</h2>
     <div class="content-block">
@@ -117,29 +141,6 @@
           <p>Пока нет ни одного отзыва. Будьте первым!</p>
         </div>
       {{/if}}
-    </div>
-  </section>
-
-  <!-- Статистика сайта -->
-  <section class="general-section">
-    <h2 class="section-title">Статистика сайта</h2>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number">{{stats.totalQuotes}}</div>
-        <div class="stat-label">Всего цитат</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{stats.totalAuthors}}</div>
-        <div class="stat-label">Авторов</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{stats.totalUsers}}</div>
-        <div class="stat-label">Пользователей</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">{{stats.totalComments}}</div>
-        <div class="stat-label">Комментариев</div>
-      </div>
     </div>
   </section>
 </div>

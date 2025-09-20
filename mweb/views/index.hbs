@@ -1,4 +1,3 @@
-<!-- Главная страница с постами от админа -->
 <div class="page-container">
   <section class="flashy-section">
     <h2 class="flashy-section__heading">Добро пожаловать на сайт САМЫХ КРУТЫХ ЦИТАТ!</h2>
@@ -12,7 +11,7 @@
     <h2 class="section-title">Новости и объявления от администрации</h2>
 
     {{#if isAuthenticated}}
-      <!-- Форма добавления нового поста (только для админа) -->
+      <!-- Форма добавления нового поста (только для авторизованных) -->
       <div class="admin-panel">
         <h3>Добавить новый пост</h3>
         <form action="/posts/create" method="POST" class="post-form">

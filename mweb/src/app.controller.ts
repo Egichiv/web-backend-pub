@@ -1,4 +1,3 @@
-// mweb/src/app.controller.ts
 import { Controller, Get, Post, Query, Body, Render, Redirect, Session } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CommentsService } from './modules/comments/comments.service';
@@ -25,11 +24,9 @@ export class AppController {
     @Query('success') success?: string,
     @Session() session?: any
   ) {
-    // Проверяем аутентификацию из сессии или параметра
     const isAuthenticated = session?.isAuthenticated || auth === 'true';
     const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
 
-    // Получаем последние посты и цитаты для главной страницы
     const [recentPosts, latestQuotes] = await Promise.all([
       this.postsService.findRecentPosts(3),
       this.quotesService.findRecentQuotes(3),
@@ -56,7 +53,7 @@ export class AppController {
     };
   }
 
-  // Страница "О сайте" с реальными комментариями из БД
+  // Страница "О сайте"
   @Get('about')
   @Render('about')
   async getAboutPage(
@@ -73,10 +70,14 @@ export class AppController {
       pageNumber = parseInt(page) || 1;
     }
 
-    const [commentsData, totalComments] = await Promise.all([
-      this.commentsService.findAll(pageNumber, 5), // 5 комментариев на страницу
+    const [commentsData, totalComments, totalQuotes, totalUsers] = await Promise.all([
+      this.commentsService.findAll(pageNumber, 5),
       this.commentsService.getTotalCount(),
+      this.quotesService.getTotalCount(),
+      this.usersService.getTotalCount(),
     ]);
+
+    const uniqueAuthorsCount = await this.quotesService.getUniqueAuthorsCount();
 
     return {
       title: 'О сайте',
@@ -101,6 +102,9 @@ export class AppController {
       hasPagination: commentsData.totalPages > 1,
       stats: {
         totalComments,
+        totalQuotes,
+        totalAuthors: uniqueAuthorsCount,
+        totalUsers,
       },
     };
   }
@@ -236,7 +240,6 @@ export class AppController {
     };
   }
 
-  // Упрощенный обработчик авторизации (для совместимости со старыми формами)
   @Post('auth/login')
   @Redirect('/')
   async postLogin(@Body() body: any, @Session() session: any) {
@@ -269,8 +272,6 @@ export class AppController {
     }
     return { url: '/?auth=false&success=logout_successful' };
   }
-
-  // УБИРАЕМ старые заглушки для POST запросов - теперь их обрабатывают соответствующие контроллеры
 
   private getSuccessMessage(success?: string): string | null {
     switch (success) {

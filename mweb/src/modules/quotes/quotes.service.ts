@@ -328,4 +328,12 @@ export class QuotesService {
       }
     });
   }
+
+  async getUniqueAuthorsCount(): Promise<number> {
+    const result = await this.prisma.quote.findMany({
+      select: { author: true },
+      distinct: ['author']
+    });
+    return result.length;
+  }
 }
