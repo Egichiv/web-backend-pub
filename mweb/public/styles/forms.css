@@ -73,7 +73,7 @@
 }
 
 .btn-primary {
-    background-color: #F29F05;
+    background-color: #F26F05;
     color: white;
 }
 
@@ -123,9 +123,9 @@
 }
 
 .alert-info {
-    background-color: #2196F3;
+    background-color: #F25C05;
     color: white;
-    border: 1px solid #0b7dda;
+    border: 1px solid #da190b;
 }
 
 /* --- ТАБЛИЦЫ --- */

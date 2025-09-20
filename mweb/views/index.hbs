@@ -33,11 +33,35 @@
     <div class="posts-container">
       {{#if posts}}
         {{#each posts}}
-          {{> postCard this isAuthenticated=../isAuthenticated}}
+          <div class="post-card">
+            <div class="post-card__header">
+              <h3 class="post-card__title">{{title}}</h3>
+              <span class="post-card__meta">
+                от {{author}} • {{wordCount}} слов
+              </span>
+            </div>
+            <div class="post-card__content">
+              <p class="post-card__text">{{content}}</p>
+            </div>
+            {{#if ../isAuthenticated}}
+              <div class="post-card__admin-actions">
+                <form method="post" action="/posts/{{id}}" style="display: inline;">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn btn-small btn-danger"
+                          onclick="return confirm('Удалить пост?')">
+                    Удалить
+                  </button>
+                </form>
+              </div>
+            {{/if}}
+          </div>
         {{/each}}
       {{else}}
         <div class="empty-state">
           <p>Пока нет ни одного поста. Заходите позже!</p>
+          {{#if isAuthenticated}}
+            <p>Как администратор, вы можете создать первый пост выше.</p>
+          {{/if}}
         </div>
       {{/if}}
     </div>

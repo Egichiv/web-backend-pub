@@ -19,4 +19,10 @@
      class="head__navigation__button {{#if (eq currentPage 'memes')}}head__navigation__button_current{{/if}}">
     Мемы
   </a>
+  {{#if isAuthenticated}}
+    <a href="/users/profile"
+       class="head__navigation__button {{#if (eq currentPage 'profile')}}head__navigation__button_current{{/if}}">
+      Профиль
+    </a>
+  {{/if}}
 </nav>

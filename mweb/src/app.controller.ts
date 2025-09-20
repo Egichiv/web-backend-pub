@@ -1,350 +1,312 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Render,
-  Query,
-  Body,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Param,
-  Redirect,
-} from '@nestjs/common';
+// mweb/src/app.controller.ts
+import { Controller, Get, Post, Query, Body, Render, Redirect, Session } from '@nestjs/common';
 import { AppService } from './app.service';
+import { CommentsService } from './modules/comments/comments.service';
+import { QuotesService } from './modules/quotes/quotes.service';
+import { PostsService } from './modules/posts/posts.service';
+import { MemesService } from './modules/memes/memes.service';
+import { UsersService } from './modules/users/users.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly commentsService: CommentsService,
+    private readonly quotesService: QuotesService,
+    private readonly postsService: PostsService,
+    private readonly memesService: MemesService,
+    private readonly usersService: UsersService,
+  ) {}
 
-  // Главная страница
   @Get()
   @Render('index')
-  getIndexPage(@Query('auth') auth?: string) {
-    // Временные данные для тестирования
-    const isAuthenticated = auth === 'true';
+  async getHello(
+    @Query('auth') auth?: string,
+    @Query('success') success?: string,
+    @Session() session?: any
+  ) {
+    // Проверяем аутентификацию из сессии или параметра
+    const isAuthenticated = session?.isAuthenticated || auth === 'true';
+    const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
+
+    // Получаем последние посты и цитаты для главной страницы
+    const [recentPosts, latestQuotes] = await Promise.all([
+      this.postsService.findRecentPosts(3),
+      this.quotesService.findRecentQuotes(3),
+    ]);
 
     return {
       title: 'Главная',
-      currentPage: 'home',
-      isMainPage: true,
+      currentPage: 'index',
       isAuthenticated,
-      username: isAuthenticated ? 'Администратор' : null,
-      posts: [
-        {
-          id: 1,
-          title: 'Добро пожаловать на обновленный сайт!',
-          text: 'Мы рады представить вам новую версию сайта с улучшенным дизайном и функциональностью.',
-        },
-        {
-          id: 2,
-          title: 'Новая функция: добавление цитат',
-          text: 'Теперь каждый пользователь может предложить свою любимую цитату для публикации на сайте.',
-        },
-      ],
-      latestQuotes: [
-        {
-          text: 'Жизнь — это то, что происходит с тобой, пока ты строишь планы.',
-          author: 'Джон Леннон',
-        },
-        {
-          text: 'В конце концов, все будет хорошо. Если все плохо, значит это еще не конец.',
-          author: 'Пауло Коэльо',
-        },
-      ],
+      username,
+      successMessage: this.getSuccessMessage(success),
+      posts: recentPosts.map(post => ({
+        id: post.id,
+        title: post.heading,
+        content: post.getPreview(200),
+        author: post.getAuthorName(),
+        wordCount: post.getWordCount(),
+      })),
+      latestQuotes: latestQuotes.map(quote => ({
+        text: quote.text,
+        author: quote.author,
+        genre: quote.getGenreName(),
+      })),
     };
   }
 
-  // Страница поиска цитат
-  @Get('quotes')
-  @Render('quotes')
-  getQuotesPage(
-    @Query('auth') auth?: string,
-    @Query('search') search?: string,
-    @Query('author') author?: string,
-    @Query('genre') genre?: string,
-    @Query('sort') sort?: string,
-    @Query('page') page: string = '1',
-  ) {
-    const isAuthenticated = auth === 'true';
-    const currentPageNumber = parseInt(page);
-
-    // Временные данные для тестирования
-    const allQuotes = [
-      {
-        id: 1,
-        author: 'Альберт Эйнштейн',
-        text: 'Воображение важнее знания.',
-        genre: 'Умная',
-        date: new Date('2024-01-15'),
-      },
-      {
-        id: 2,
-        author: 'Стив Джобс',
-        text: 'Оставайтесь голодными, оставайтесь безрассудными.',
-        genre: 'Мотивирующая',
-        date: new Date('2024-01-16'),
-      },
-      {
-        id: 3,
-        author: 'Марк Твен',
-        text: 'Бросить курить легко. Я сам бросал тысячу раз.',
-        genre: 'Смешная',
-        date: new Date('2024-01-17'),
-      },
-      {
-        id: 4,
-        author: 'Конфуций',
-        text: 'Выберите себе работу по душе, и вам не придется работать ни одного дня в своей жизни.',
-        genre: 'Мотивирующая',
-        date: new Date('2024-01-18'),
-      },
-      {
-        id: 5,
-        author: 'Оскар Уайльд',
-        text: 'Будь собой. Остальные роли уже заняты.',
-        genre: 'Реалистичная',
-        date: new Date('2024-01-19'),
-      },
-    ];
-
-    // Простая фильтрация
-    let filteredQuotes = allQuotes;
-    if (search) {
-      filteredQuotes = filteredQuotes.filter((q) =>
-        q.text.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
-    if (author) {
-      filteredQuotes = filteredQuotes.filter((q) =>
-        q.author.toLowerCase().includes(author.toLowerCase()),
-      );
-    }
-    if (genre) {
-      const genreMap: Record<string, string> = {
-        smart: 'Умная',
-        motivating: 'Мотивирующая',
-        realistic: 'Реалистичная',
-        funny: 'Смешная',
-      };
-      filteredQuotes = filteredQuotes.filter(
-        (q) => q.genre === genreMap[genre],
-      );
-    }
-
-    const itemsPerPage = 3;
-    const totalPages = Math.ceil(filteredQuotes.length / itemsPerPage);
-    const startIndex = (currentPageNumber - 1) * itemsPerPage;
-    const paginatedQuotes = filteredQuotes.slice(
-      startIndex,
-      startIndex + itemsPerPage,
-    );
-
-    return {
-      title: 'Поиск цитат',
-      currentPage: 'quotes',
-      isAuthenticated,
-      username: isAuthenticated ? 'Администратор' : null,
-      quotes: paginatedQuotes,
-      quotesCount: filteredQuotes.length,
-      searchQuery: search,
-      authorFilter: author,
-      genreFilter: genre,
-      sortBy: sort || 'date_desc',
-      hasPagination: totalPages > 1,
-      hasPrevPage: currentPageNumber > 1,
-      hasNextPage: currentPageNumber < totalPages,
-      prevPage: currentPageNumber - 1,
-      nextPage: currentPageNumber + 1,
-      currentPageNumber,
-      totalPages,
-    };
-  }
-
-  // Страница добавления цитаты
-  @Get('addQuote')
-  @Render('addQuote')
-  getAddQuotePage(@Query('auth') auth?: string) {
-    const isAuthenticated = auth === 'true';
-
-    return {
-      title: 'Добавить цитату',
-      currentPage: 'addQuote',
-      isAuthenticated,
-      username: isAuthenticated ? 'Администратор' : null,
-      userQuotes: isAuthenticated
-        ? [
-            {
-              text: 'Тестовая цитата 1',
-              author: 'Автор 1',
-              status: 'published',
-            },
-            { text: 'Тестовая цитата 2', author: 'Автор 2', status: 'pending' },
-          ]
-        : [],
-    };
-  }
-
-  // Страница "О сайте"
+  // Страница "О сайте" с реальными комментариями из БД
   @Get('about')
   @Render('about')
-  getAboutPage(
+  async getAboutPage(
     @Query('auth') auth?: string,
-    @Query('page') page: string = '1',
+    @Query('success') success?: string,
+    @Query('error') error?: string,
+    @Query('page') page?: string,
+    @Session() session?: any
   ) {
-    const isAuthenticated = auth === 'true';
-    const currentPageNumber = parseInt(page);
+    const isAuthenticated = session?.isAuthenticated || auth === 'true';
+    const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
+    let pageNumber = 1;
+    if (page != null) {
+      pageNumber = parseInt(page) || 1;
+    }
 
-    // Временные данные
-    const allComments = [
-      {
-        id: 1,
-        author: 'Иван',
-        text: 'Отличный сайт! Много интересных цитат.',
-        date: new Date('2024-01-20'),
-      },
-      {
-        id: 2,
-        author: 'Мария',
-        text: 'Удобный поиск и красивый дизайн.',
-        date: new Date('2024-01-21'),
-      },
-      {
-        id: 3,
-        author: 'Петр',
-        text: 'Спасибо за вдохновляющие цитаты!',
-        date: new Date('2024-01-22'),
-      },
-      {
-        id: 4,
-        author: 'Анна',
-        text: 'Каждый день захожу за новой порцией мудрости.',
-        date: new Date('2024-01-23'),
-      },
-    ];
-
-    const itemsPerPage = 3;
-    const totalPages = Math.ceil(allComments.length / itemsPerPage);
-    const startIndex = (currentPageNumber - 1) * itemsPerPage;
-    const paginatedComments = allComments.slice(
-      startIndex,
-      startIndex + itemsPerPage,
-    );
+    const [commentsData, totalComments] = await Promise.all([
+      this.commentsService.findAll(pageNumber, 5), // 5 комментариев на страницу
+      this.commentsService.getTotalCount(),
+    ]);
 
     return {
       title: 'О сайте',
       currentPage: 'about',
       isAuthenticated,
-      username: isAuthenticated ? 'Администратор' : null,
-      comments: paginatedComments,
-      commentsCount: allComments.length,
+      username,
+      commentSuccess: success === 'comment_created',
+      commentError: error === 'comment_creation_failed',
+      comments: commentsData.comments.map(comment => ({
+        id: comment.id,
+        text: comment.text,
+        createdAt: comment.createdAt,
+        author: comment.getAuthorName(),
+      })),
+      commentsCount: commentsData.total,
+      currentPageNumber: commentsData.currentPageNumber,
+      totalPages: commentsData.totalPages,
+      hasNextPage: commentsData.hasNext,
+      hasPrevPage: commentsData.hasPrev,
+      nextPage: commentsData.hasNext ? commentsData.currentPageNumber + 1 : null,
+      prevPage: commentsData.hasPrev ? commentsData.currentPageNumber - 1 : null,
+      hasPagination: commentsData.totalPages > 1,
       stats: {
-        totalQuotes: 1250,
-        totalAuthors: 380,
-        totalUsers: 42,
-        totalComments: allComments.length,
+        totalComments,
       },
-      hasPagination: totalPages > 1,
-      hasPrevPage: currentPageNumber > 1,
-      hasNextPage: currentPageNumber < totalPages,
-      prevPage: currentPageNumber - 1,
-      nextPage: currentPageNumber + 1,
-      currentPageNumber,
-      totalPages,
     };
   }
 
-  // Страница с мемами
+  @Get('quotes')
+  @Render('quotes')
+  async getQuotesPage(
+    @Query('auth') auth?: string,
+    @Query('genre') genre?: string,
+    @Query('search') search?: string,
+    @Session() session?: any
+  ) {
+    const isAuthenticated = session?.isAuthenticated || auth === 'true';
+    const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
+
+    // Подготавливаем фильтры
+    const filters: any = {};
+    if (genre) filters.genre = genre;
+    if (search) filters.search = search;
+
+    const [quotesData, genreStats] = await Promise.all([
+      this.quotesService.findAll(1, 12, filters), // первая страница, 12 цитат
+      this.quotesService.getQuotesByGenreStats(),
+    ]);
+
+    return {
+      title: 'Цитаты',
+      currentPage: 'quotes',
+      isAuthenticated,
+      username,
+      quotes: quotesData.quotes.map(quote => ({
+        id: quote.id,
+        text: quote.text,
+        author: quote.author,
+        genre: quote.genre,
+        genreName: quote.getGenreName(),
+        preview: quote.getPreview(150),
+      })),
+      quotesCount: quotesData.total,
+      genreFilter: genre || null,
+      searchTerm: search || '',
+      genreStats,
+    };
+  }
+
+  @Get('addQuote')
+  @Render('addQuote')
+  getAddQuotePage(
+    @Query('auth') auth?: string,
+    @Query('success') success?: string,
+    @Query('error') error?: string,
+    @Session() session?: any
+  ) {
+    const isAuthenticated = session?.isAuthenticated || auth === 'true';
+    const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
+
+    return {
+      title: 'Добавить цитату',
+      currentPage: 'addQuote',
+      isAuthenticated,
+      username,
+      successMessage: this.getSuccessMessage(success),
+      errorMessage: this.getErrorMessage(error),
+      genreOptions: [
+        { value: 'SMART', name: 'Умная' },
+        { value: 'MOTIVATING', name: 'Мотивирующая' },
+        { value: 'REALISTIC', name: 'Реалистичная' },
+        { value: 'FUNNY', name: 'Смешная' },
+      ],
+    };
+  }
+
   @Get('memes')
   @Render('memes')
-  getMemesPage(@Query('auth') auth?: string) {
-    const isAuthenticated = auth === 'true';
+  async getMemesPage(
+    @Query('auth') auth?: string,
+    @Query('page') page?: string,
+    @Session() session?: any
+  ) {
+    const isAuthenticated = session?.isAuthenticated || auth === 'true';
+    const username = session?.user?.nickname || (isAuthenticated ? 'Администратор' : null);
+    let pageNumber = 1;
+    if (page != null) {
+      pageNumber = parseInt(page) || 1;
+    }
+
+    const memesData = await this.memesService.findAll(pageNumber, 12); // 12 мемов на страницу
 
     return {
       title: 'Мемы',
       currentPage: 'memes',
       isAuthenticated,
-      username: isAuthenticated ? 'Администратор' : null,
-      memes: [
-        {
-          id: 1,
-          url: '/images/meme1.jpg',
-          alt: 'Мем про программирование',
-          caption: 'Когда код работает с первого раза',
-        },
-        {
-          id: 2,
-          url: '/images/meme2.jpg',
-          alt: 'Мем про дедлайны',
-          caption: 'Дедлайн был вчера',
-        },
-        {
-          id: 3,
-          url: '/images/meme3.jpg',
-          alt: 'Мем про баги',
-          caption: 'Это не баг, это фича',
-        },
-      ],
-      memesCount: 3,
-      viewsCount: 1337,
-      lastUpdate: '19 января 2024',
-      hasMore: false,
+      username,
+      memes: memesData.memes.map(meme => ({
+        id: meme.id,
+        link: meme.link,
+        uploader: meme.getUploaderName(),
+        domain: meme.getDomain(),
+        isFromPopular: meme.isFromPopularPlatform(),
+        shortLink: meme.getShortLink(40),
+      })),
+      memesCount: memesData.total,
+      currentPageNumber: memesData.currentPage,
+      hasMore: memesData.hasNext,
+      hasNextPage: memesData.hasNext,
+      hasPrevPage: memesData.hasPrev,
+      nextPage: memesData.hasNext ? memesData.currentPage + 1 : null,
+      prevPage: memesData.hasPrev ? memesData.currentPage - 1 : null,
     };
   }
 
-  // Страница авторизации
   @Get('login')
   @Render('login')
-  getLoginPage(@Query('error') error?: string) {
+  getLoginPage(@Query('error') error?: string, @Query('success') success?: string) {
     return {
       title: 'Вход в систему',
       currentPage: 'login',
       isAuthenticated: false,
       error: error === 'true' ? 'Неверный логин или пароль' : null,
-      redirectUrl: '/',
+      errorMessage: this.getErrorMessage(error),
+      successMessage: this.getSuccessMessage(success),
     };
   }
 
-  // Обработка формы авторизации (простейшая реализация)
+  @Get('register')
+  @Render('register')
+  getRegisterPage(@Query('error') error?: string) {
+    return {
+      title: 'Регистрация',
+      currentPage: 'register',
+      isAuthenticated: false,
+      errorMessage: this.getErrorMessage(error),
+    };
+  }
+
+  // Упрощенный обработчик авторизации (для совместимости со старыми формами)
   @Post('auth/login')
   @Redirect('/')
-  postLogin(@Body() body: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  async postLogin(@Body() body: any, @Session() session: any) {
     const { username, password } = body;
 
-    // Простейшая проверка для демо
-    if (username === 'admin' && password === 'admin') {
-      // В реальном приложении здесь должна быть работа с сессиями
-      return { url: '/?auth=true' };
-    } else {
-      return { url: '/login?error=true' };
+    try {
+      const user = await this.usersService.login({
+        nickname: username,
+        password: password,
+      });
+
+      // Сохраняем пользователя в сессии
+      session.user = {
+        id: user.id,
+        nickname: user.nickname,
+      };
+      session.isAuthenticated = true;
+
+      return { url: '/?auth=true&success=login_successful' };
+    } catch (error) {
+      return { url: '/login?error=invalid_credentials' };
     }
   }
 
-  // Выход из системы
   @Get('logout')
   @Redirect('/')
-  logout() {
-    return { url: '/?auth=false' };
+  logout(@Session() session: any) {
+    if (session) {
+      session.destroy();
+    }
+    return { url: '/?auth=false&success=logout_successful' };
   }
 
-  // Заглушки для POST запросов
-  @Post('posts/create')
-  @Redirect('/')
-  createPost(@Body() body: any) {
-    console.log('Creating post:', body);
-    return { url: '/?auth=true&success=post_created' };
+  // УБИРАЕМ старые заглушки для POST запросов - теперь их обрабатывают соответствующие контроллеры
+
+  private getSuccessMessage(success?: string): string | null {
+    switch (success) {
+      case 'post_created':
+        return 'Пост успешно создан!';
+      case 'quote_created':
+        return 'Цитата успешно добавлена!';
+      case 'comment_created':
+        return 'Комментарий успешно добавлен!';
+      case 'login_successful':
+        return 'Добро пожаловать!';
+      case 'logout_successful':
+        return 'Вы успешно вышли из системы.';
+      case 'registration_successful':
+        return 'Регистрация прошла успешно!';
+      default:
+        return null;
+    }
   }
 
-  @Post('quotes/create')
-  @Redirect('/addQuote')
-  createQuote(@Body() body: any) {
-    console.log('Creating quote:', body);
-    return { url: '/addQuote?auth=true&success=quote_created' };
-  }
-
-  @Post('comments/create')
-  @Redirect('/about')
-  createComment(@Body() body: any) {
-    console.log('Creating comment:', body);
-    return { url: '/about?auth=true&success=comment_created' };
+  private getErrorMessage(error?: string): string | null {
+    switch (error) {
+      case 'creation_failed':
+        return 'Ошибка при создании. Попробуйте еще раз.';
+      case 'comment_creation_failed':
+        return 'Ошибка при добавлении комментария.';
+      case 'quote_creation_failed':
+        return 'Ошибка при добавлении цитаты.';
+      case 'invalid_credentials':
+        return 'Неверное имя пользователя или пароль.';
+      case 'user_exists':
+        return 'Пользователь с таким именем уже существует.';
+      case 'registration_failed':
+        return 'Ошибка при регистрации.';
+      default:
+        return null;
+    }
   }
 }

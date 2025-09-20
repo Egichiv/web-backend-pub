@@ -1,15 +1,28 @@
 <article class="post-card">
   <div class="post-card__header">
-    <h3 class="post-card__title">{{title}}</h3>
-    <span class="post-card__id">#{{id}}</span>
+    <h3 class="post-card__title">
+      <a href="/posts/{{id}}">{{title}}</a>
+    </h3>
+    <span class="post-card__meta">
+      от {{author}} • {{wordCount}} слов
+    </span>
   </div>
   <div class="post-card__content">
-    <p class="post-card__text">{{text}}</p>
+    <p class="post-card__text">{{content}}</p>
   </div>
-  {{#if isAuthenticated}}
-    <div class="post-card__admin-actions">
-      <button class="post-card__edit-btn" data-post-id="{{id}}">Редактировать</button>
-      <button class="post-card__delete-btn" data-post-id="{{id}}">Удалить</button>
-    </div>
-  {{/if}}
+  <div class="post-card__footer">
+    <a href="/posts/{{id}}" class="btn btn-small">Читать далее</a>
+    {{#if isAuthenticated}}
+      <div class="post-card__admin-actions">
+        <a href="/posts/{{id}}/edit" class="btn btn-small btn-secondary">Редактировать</a>
+        <form method="post" action="/posts/{{id}}" style="display: inline;">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-small btn-danger"
+                  onclick="return confirm('Удалить пост?')">
+            Удалить
+          </button>
+        </form>
+      </div>
+    {{/if}}
+  </div>
 </article>

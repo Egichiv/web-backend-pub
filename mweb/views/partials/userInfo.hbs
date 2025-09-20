@@ -1,21 +1,16 @@
-<div class="user-session-info">
+<div class="head__user-info">
   {{#if isAuthenticated}}
-    <div class="user-session-info__authenticated">
-            <span class="user-session-info__greeting">
-                Привет, <strong>{{username}}</strong>!
-            </span>
-      <a href="/logout" class="user-session-info__logout-btn">
-        Выйти
-      </a>
+    <span class="head__user-greeting">
+      Привет, <strong>{{username}}</strong>!
+    </span>
+    <div class="head__user-actions">
+      <a href="/users/profile" class="btn btn-small btn-secondary">Профиль</a>
+      <a href="/logout" class="btn btn-small btn-outline">Выход</a>
     </div>
   {{else}}
-    <div class="user-session-info__guest">
-            <span class="user-session-info__guest-text">
-                Вы не авторизованы
-            </span>
-      <a href="/login" class="user-session-info__login-btn">
-        Войти
-      </a>
+    <div class="head__auth-links">
+      <a href="/login" class="btn btn-small btn-primary">Вход</a>
+      <a href="/register" class="btn btn-small btn-secondary">Регистрация</a>
     </div>
   {{/if}}
 </div>

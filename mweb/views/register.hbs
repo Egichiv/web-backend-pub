@@ -1,0 +1,100 @@
+{{> header}}
+<div class="page-container">
+  <section class="general-section">
+    <h1 class="page-title">Регистрация</h1>
+
+    {{#if errorMessage}}
+      <div class="alert alert-error">
+        ❌ {{errorMessage}}
+      </div>
+    {{/if}}
+
+    <div class="form-container">
+      <form action="/users/register" method="POST" class="register-form">
+        <div class="form-group">
+          <label for="registerNickname" class="required">Имя пользователя:</label>
+          <input type="text"
+                 id="registerNickname"
+                 name="nickname"
+                 required
+                 placeholder="Выберите имя пользователя"
+                 minlength="3"
+                 maxlength="50"
+                 class="form-input">
+          <small class="form-hint">От 3 до 50 символов, только буквы, цифры и подчеркивания</small>
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword" class="required">Пароль:</label>
+          <input type="password"
+                 id="registerPassword"
+                 name="password"
+                 required
+                 placeholder="Придумайте надежный пароль"
+                 minlength="6"
+                 class="form-input">
+          <small class="form-hint">Минимум 6 символов</small>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="required">Подтвердите пароль:</label>
+          <input type="password"
+                 id="confirmPassword"
+                 name="confirmPassword"
+                 required
+                 placeholder="Повторите пароль"
+                 class="form-input">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-large">
+            Зарегистрироваться
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-links">
+        <p>
+          Уже есть аккаунт?
+          <a href="/login" class="btn btn-outline">Войти</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Информационная секция -->
+  <section class="general-section">
+    <h2 class="section-title">Зачем нужна регистрация?</h2>
+    <div class="info-content">
+      <p>После регистрации вам станут доступны следующие возможности:</p>
+      <ul class="features-list">
+        <li>Добавление цитат с вашим именем</li>
+        <li>Загрузка мемов</li>
+        <li>Создание постов</li>
+        <li>Комментарии от вашего имени</li>
+        <li>Персональный профиль с вашей активностью</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Проверка совпадения паролей
+  document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('registerPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    function validatePassword() {
+      if (password.value !== confirmPassword.value) {
+        confirmPassword.setCustomValidity('Пароли не совпадают');
+      } else {
+        confirmPassword.setCustomValidity('');
+      }
+    }
+
+    password.addEventListener('change', validatePassword);
+    confirmPassword.addEventListener('keyup', validatePassword);
+  });
+</script>
+
+{{> footer}}

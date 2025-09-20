@@ -90,4 +90,77 @@ export function registerHandlebarsHelpers(): void {
   hbs.registerHelper('debug', function (value: any): void {
     console.log('Debug:', value);
   });
+
+  hbs.registerHelper('formatDate', function(date: Date) {
+    if (!date) return 'Неизвестно';
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/Moscow'
+    };
+
+    return new Intl.DateTimeFormat('ru-RU', options).format(new Date(date));
+  });
+
+  // Хелпер для сравнения значений (для условий в шаблонах)
+  hbs.registerHelper('eq', function(a: any, b: any) {
+    return a === b;
+  });
+
+  // Хелпер для логического ИЛИ
+  hbs.registerHelper('or', function(a: any, b: any) {
+    return a || b;
+  });
+
+  // Хелпер для логического И
+  hbs.registerHelper('and', function(a: any, b: any) {
+    return a && b;
+  });
+
+  // Хелпер для проверки, содержит ли строка подстроку
+  hbs.registerHelper('contains', function(str: string, substr: string) {
+    return str && str.includes(substr);
+  });
+
+  // Хелпер для обрезки текста
+  hbs.registerHelper('truncate', function(str: string, length: number) {
+    if (!str) return '';
+    if (str.length <= length) return str;
+    return str.substring(0, length) + '...';
+  });
+
+  // Хелпер для отображения времени в относительном формате
+  hbs.registerHelper('timeAgo', function(date: Date) {
+    if (!date) return 'Неизвестно';
+
+    const now = new Date();
+    const diffMs = now.getTime() - new Date(date).getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffHours < 1) return 'Менее часа назад';
+    if (diffHours < 24) return `${diffHours} ч. назад`;
+    if (diffDays < 30) return `${diffDays} д. назад`;
+
+    return new Intl.DateTimeFormat('ru-RU', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(new Date(date));
+  });
+
+  // Хелпер для отображения множественного числа
+  hbs.registerHelper('pluralize', function(count: number, one: string, few: string, many: string) {
+    const lastDigit = count % 10;
+    const lastTwoDigits = count % 100;
+
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return many;
+    if (lastDigit === 1) return one;
+    if (lastDigit >= 2 && lastDigit <= 4) return few;
+    return many;
+  });
 }

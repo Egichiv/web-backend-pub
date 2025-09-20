@@ -1,4 +1,5 @@
-<!-- Страница с мемами -->
+<!-- mweb/views/memes.hbs -->
+{{> header}}
 <div class="page-container">
   <section class="flashy-section">
     <h1 class="flashy-section__heading">Галерея мемов</h1>
@@ -11,31 +12,23 @@
   {{#if isAuthenticated}}
     <!-- Панель администратора для загрузки мемов -->
     <section class="general-section admin-section">
-      <h2 class="section-title">Управление мемами</h2>
-      <div class="admin-info">
-        <p>Как администратор, вы можете управлять мемами через панель управления.</p>
-        <p>Загрузка новых мемов происходит через серверную часть.</p>
-      </div>
+      <h2 class="section-title">Добавить новый мем</h2>
+      <form action="/memes/create" method="POST" class="meme-form">
+        <div class="form-group">
+          <label for="memeLink" class="required">Ссылка на мем:</label>
+          <input type="url"
+                 id="memeLink"
+                 name="link"
+                 required
+                 placeholder="https://example.com/meme.jpg"
+                 class="form-input">
+          <small class="form-hint">Введите прямую ссылку на изображение мема</small>
+        </div>
+        <input type="hidden" name="uploader" value="{{username}}">
+        <button type="submit" class="btn btn-primary">Добавить мем</button>
+      </form>
     </section>
   {{/if}}
-
-  <!-- Фильтры и сортировка -->
-  <section class="general-section">
-    <div class="memes-controls">
-      <div class="view-toggle">
-        <label>Вид отображения:</label>
-        <button class="btn btn-small" onclick="toggleView('grid')">Сетка</button>
-        <button class="btn btn-small" onclick="toggleView('list')">Список</button>
-      </div>
-
-      <div class="size-toggle">
-        <label>Размер:</label>
-        <button class="btn btn-small" onclick="changeSize('small')">S</button>
-        <button class="btn btn-small" onclick="changeSize('medium')">M</button>
-        <button class="btn btn-small" onclick="changeSize('large')">L</button>
-      </div>
-    </div>
-  </section>
 
   <!-- Галерея мемов -->
   <section class="general-section">
@@ -44,9 +37,53 @@
     {{#if memes}}
       <div class="memes-gallery" id="memesGallery">
         {{#each memes}}
-          {{> memeCard this}}
+          <div class="meme-card">
+            {{#if isFromPopular}}
+              <div class="meme-badge">Популярная платформа</div>
+            {{/if}}
+            <div class="meme-card__image-container">
+              <a href="/memes/{{id}}" target="_blank">
+                <img src="{{link}}" alt="Мем от {{uploader}}" class="meme-card__image" loading="lazy">
+              </a>
+            </div>
+            <div class="meme-card__info">
+              <p class="meme-card__uploader">От: {{uploader}}</p>
+              <p class="meme-card__domain">Источник: {{domain}}</p>
+              <p class="meme-card__link">
+                <a href="{{link}}" target="_blank" rel="noopener">{{shortLink}}</a>
+              </p>
+            </div>
+            {{#if ../isAuthenticated}}
+              <div class="meme-card__actions">
+                <form method="post" action="/memes/{{id}}" style="display: inline;">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn btn-small btn-danger"
+                          onclick="return confirm('Удалить мем?')">
+                    Удалить
+                  </button>
+                </form>
+              </div>
+            {{/if}}
+          </div>
         {{/each}}
       </div>
+
+      <!-- Пагинация -->
+      {{#if hasNextPage}}
+        <div class="pagination">
+          {{#if hasPrevPage}}
+            <a href="/memes?page={{prevPage}}" class="pagination__link">← Предыдущие</a>
+          {{/if}}
+
+          <span class="pagination__info">
+            Страница {{currentPageNumber}}
+          </span>
+
+          {{#if hasNextPage}}
+            <a href="/memes?page={{nextPage}}" class="pagination__link">Следующие →</a>
+          {{/if}}
+        </div>
+      {{/if}}
 
       <!-- Кнопка "Загрузить еще" для ленивой загрузки -->
       {{#if hasMore}}
@@ -61,7 +98,7 @@
         <h3>Упс! Мемов пока нет</h3>
         <p>Но скоро здесь появится много смешного контента!</p>
         {{#if isAuthenticated}}
-          <p class="admin-hint">💡 Администратор может добавить мемы через серверную панель</p>
+          <p class="admin-hint">Администратор может добавить мемы выше</p>
         {{/if}}
       </div>
     {{/if}}
@@ -78,12 +115,6 @@
       <div class="meme-stats">
         <div class="stat-item">
           <span class="stat-text">- Всего мемов: <strong>{{memesCount}}</strong></span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-text">- Просмотров: <strong>{{viewsCount}}</strong></span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-text">- Последнее обновление: <strong>{{lastUpdate}}</strong></span>
         </div>
       </div>
     </div>
@@ -111,6 +142,9 @@
 
   function loadMoreMemes() {
     // Это будет реализовано в JavaScript для динамической подгрузки
-    console.log('Loading more memes...');
+    const nextPage = {{nextPage}};
+    if (nextPage) {
+      window.location.href = `/memes?page=${nextPage}`;
+    }
   }
 </script>

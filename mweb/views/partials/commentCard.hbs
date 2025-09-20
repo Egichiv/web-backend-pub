@@ -1,14 +1,21 @@
 <div class="comment-card">
   <div class="comment-card__header">
     <span class="comment-card__author">{{author}}</span>
-    <span class="comment-card__date">{{formatDate date}}</span>
+    <span class="comment-card__date">{{formatDate createdAt}}</span>
   </div>
   <div class="comment-card__content">
     <p class="comment-card__text">{{text}}</p>
   </div>
   {{#if canDelete}}
     <div class="comment-card__actions">
-      <button class="comment-card__delete-btn" data-comment-id="{{id}}">Удалить</button>
+      <a href="/comments/{{id}}/edit" class="btn btn-small btn-secondary">Изменить</a>
+      <form method="post" action="/comments/{{id}}" style="display: inline;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-small btn-danger"
+                onclick="return confirm('Удалить комментарий?')">
+          Удалить
+        </button>
+      </form>
     </div>
   {{/if}}
 </div>
