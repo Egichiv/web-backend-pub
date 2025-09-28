@@ -44,7 +44,18 @@ export class Quote implements PrismaQuote {
   }
 
   getFormattedUploadedAt(): string {
-    return this.uploadedAt.toDateString();
+    if (!this.uploadedAt) return 'Неизвестно';
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/Moscow'
+    };
+
+    return new Intl.DateTimeFormat('ru-RU', options).format(new Date(this.uploadedAt));
   }
 
   getUploaderName(): string {

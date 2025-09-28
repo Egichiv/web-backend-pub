@@ -42,6 +42,7 @@ export class QuotesController {
     @Query('genre') genre?: string,
     @Query('author') author?: string,
     @Query('search') search?: string,
+    @Query('sort') sort?: string,
     @Query('auth') auth?: string,
     @Query('success') success?: string,
     @Query('error') error?: string,
@@ -62,6 +63,9 @@ export class QuotesController {
     }
     if (search) {
       filters.search = search;
+    }
+    if (sort) {
+      filters.sort = sort;
     }
 
     const result = await this.quotesService.findAll(pageNumber, 12, filters); // 12 цитат на страницу
@@ -100,6 +104,7 @@ export class QuotesController {
       selectedGenre: genre || '',
       selectedAuthor: author || '',
       searchTerm: search || '',
+      selectedSort: sort || 'date_desc', // Добавляем выбранную сортировку
       genreOptions: [
         { value: '', name: 'Все жанры' },
         { value: 'SMART', name: 'Умные' },
@@ -110,7 +115,7 @@ export class QuotesController {
       genreStats,
 
       // Построение URL для фильтров
-      filterParams: this.buildFilterParams({ genre, author, search }),
+      filterParams: this.buildFilterParams({ genre, author, search, sort }),
     };
   }
 
@@ -374,11 +379,12 @@ export class QuotesController {
     }
   }
 
-  private buildFilterParams(filters: { genre?: string; author?: string; search?: string }): string {
+  private buildFilterParams(filters: { genre?: string; author?: string; search?: string; sort?: string }): string {
     const params = new URLSearchParams();
     if (filters.genre) params.append('genre', filters.genre);
     if (filters.author) params.append('author', filters.author);
     if (filters.search) params.append('search', filters.search);
+    if (filters.sort) params.append('sort', filters.sort);
     return params.toString();
   }
 }

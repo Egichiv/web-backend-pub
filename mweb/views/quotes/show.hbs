@@ -1,0 +1,94 @@
+<!-- Страница просмотра отдельной цитаты -->
+<div class="page-container">
+  <section class="general-section">
+    <div class="quote-header">
+      <h1 class="page-title">{{title}}</h1>
+      <div class="breadcrumb">
+        <a href="/quotes">← Назад к поиску цитат</a>
+      </div>
+    </div>
+
+    {{#if successMessage}}
+      <div class="alert alert-success">
+        {{successMessage}}
+      </div>
+    {{/if}}
+
+    {{#if errorMessage}}
+      <div class="alert alert-error">
+        {{errorMessage}}
+      </div>
+    {{/if}}
+
+    <!-- Отображение цитаты -->
+    <div class="quote-detail-container">
+      <div class="quote-detail-card">
+        <div class="quote-text-section">
+          <blockquote class="quote-text">
+            "{{quote.text}}"
+          </blockquote>
+          <cite class="quote-author">— {{quote.author}}</cite>
+        </div>
+
+        <div class="quote-metadata">
+          <div class="metadata-item">
+            <strong>Жанр:</strong>
+            <span class="genre-badge genre-{{quote.genre}}">{{quote.genreName}}</span>
+          </div>
+          <div class="metadata-item">
+            <strong>Дата добавления:</strong>
+            <span class="upload-date">{{quote.formattedDate}}</span>
+          </div>
+          <div class="metadata-item">
+            <strong>Добавил:</strong>
+            <span class="uploader">{{quote.uploader}}</span>
+          </div>
+          {{#if quote.isRecentlyUploaded}}
+            <div class="metadata-item">
+              <span class="badge badge-new">Новое</span>
+            </div>
+          {{/if}}
+        </div>
+
+        <!-- Действия для администратора -->
+        {{#if isAuthenticated}}
+          <div class="quote-actions">
+            <h3>Действия администратора</h3>
+            <div class="action-buttons">
+              <a href="/quotes/{{quote.id}}/edit" class="btn btn-primary">
+                Редактировать цитату
+              </a>
+
+              <form method="post" action="/quotes/{{quote.id}}" style="display: inline;">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('Вы уверены, что хотите удалить эту цитату?')">
+                  Удалить цитату
+                </button>
+              </form>
+            </div>
+          </div>
+        {{/if}}
+
+        <!-- Дополнительная информация -->
+        <div class="quote-additional-info">
+          <h3>Дополнительная информация</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>ID цитаты:</strong> {{quote.id}}
+            </div>
+            {{#if quote.isValid}}
+              <div class="info-item">
+                <span class="status-badge status-valid">✓ Цитата прошла валидацию</span>
+              </div>
+            {{else}}
+              <div class="info-item">
+                <span class="status-badge status-invalid">⚠ Требует проверки</span>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -12,7 +12,7 @@
             <input type="text"
                    id="searchText"
                    name="search"
-                   value="{{searchQuery}}"
+                   value="{{searchTerm}}"
                    placeholder="Введите текст для поиска..."
                    class="form-input">
           </div>
@@ -22,7 +22,7 @@
             <input type="text"
                    id="authorFilter"
                    name="author"
-                   value="{{authorFilter}}"
+                   value="{{selectedAuthor}}"
                    placeholder="Имя автора..."
                    class="form-input">
           </div>
@@ -30,20 +30,20 @@
           <div class="form-group">
             <label for="genreFilter">Жанр:</label>
             <select id="genreFilter" name="genre" class="form-select">
-              <option value="">Все жанры</option>
-              <option value="smart" {{#if (eq genreFilter 'smart')}}selected{{/if}}>Умная</option>
-              <option value="motivating" {{#if (eq genreFilter 'motivating')}}selected{{/if}}>Мотивирующая</option>
-              <option value="realistic" {{#if (eq genreFilter 'realistic')}}selected{{/if}}>Реалистичная</option>
-              <option value="funny" {{#if (eq genreFilter 'funny')}}selected{{/if}}>Смешная</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="sortBy">Сортировка:</label>
-            <select id="sortBy" name="sort" class="form-select">
-              <option value="date_desc" {{#if (eq sortBy 'date_desc')}}selected{{/if}}>Сначала новые</option>
-              <option value="date_asc" {{#if (eq sortBy 'date_asc')}}selected{{/if}}>Сначала старые</option>
-              <option value="author" {{#if (eq sortBy 'author')}}selected{{/if}}>По автору</option>
+              {{#if genreOptions}}
+                {{#each genreOptions}}
+                  <option value="{{this.value}}"
+                          {{#if (eq this.value ../selectedGenre)}}selected{{/if}}>
+                    {{this.name}}
+                  </option>
+                {{/each}}
+              {{else}}
+                <option value="">Все жанры</option>
+                <option value="SMART" {{#if (eq selectedGenre 'SMART')}}selected{{/if}}>Умные</option>
+                <option value="MOTIVATING" {{#if (eq selectedGenre 'MOTIVATING')}}selected{{/if}}>Мотивирующие</option>
+                <option value="REALISTIC" {{#if (eq selectedGenre 'REALISTIC')}}selected{{/if}}>Реалистичные</option>
+                <option value="FUNNY" {{#if (eq selectedGenre 'FUNNY')}}selected{{/if}}>Смешные</option>
+              {{/if}}
             </select>
           </div>
         </div>
@@ -55,6 +55,19 @@
       </form>
     </div>
   </section>
+
+  <!-- Успешные/ошибочные сообщения -->
+  {{#if successMessage}}
+    <div class="alert alert-success">
+      {{successMessage}}
+    </div>
+  {{/if}}
+
+  {{#if errorMessage}}
+    <div class="alert alert-error">
+      {{errorMessage}}
+    </div>
+  {{/if}}
 
   <!-- Результаты поиска -->
   <section class="quotes-marks-section">
@@ -71,7 +84,6 @@
             <th>Автор</th>
             <th>Цитата</th>
             <th>Жанр</th>
-            <th>Дата добавления</th>
             {{#if isAuthenticated}}
               <th>Действия</th>
             {{/if}}
@@ -89,16 +101,16 @@
       {{#if hasPagination}}
         <div class="pagination">
           {{#if hasPrevPage}}
-            <a href="/quotes?page={{prevPage}}&search={{searchQuery}}&author={{authorFilter}}&genre={{genreFilter}}&sort={{sortBy}}"
+            <a href="/quotes?page={{prevPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
             class="pagination__link">← Предыдущая</a>
           {{/if}}
 
           <span class="pagination__info">
-                        Страница {{currentPageNumber}} из {{totalPages}}
-                    </span>
+            Страница {{currentPageNumber}} из {{totalPages}}
+          </span>
 
           {{#if hasNextPage}}
-            <a href="/quotes?page={{nextPage}}&search={{searchQuery}}&author={{authorFilter}}&genre={{genreFilter}}&sort={{sortBy}}"
+            <a href="/quotes?page={{nextPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
             class="pagination__link">Следующая →</a>
           {{/if}}
         </div>

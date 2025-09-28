@@ -1,0 +1,186 @@
+<!-- Страница редактирования цитаты -->
+<div class="page-container">
+  <section class="general-section">
+    <div class="edit-header">
+      <h1 class="page-title">{{title}}</h1>
+      <div class="breadcrumb">
+        <a href="/quotes">← К поиску цитат</a>
+        {{#if quote.id}}
+          <span> / </span>
+          <a href="/quotes/{{quote.id}}">К просмотру цитаты</a>
+        {{/if}}
+      </div>
+    </div>
+
+    {{#if errorMessage}}
+      <div class="alert alert-error">
+        {{errorMessage}}
+      </div>
+    {{/if}}
+
+    <!-- Форма редактирования -->
+    <div class="edit-form-container">
+      <form action="/quotes/{{quote.id}}" method="POST" class="edit-quote-form">
+        <input type="hidden" name="_method" value="PATCH">
+
+        <div class="form-section">
+          <h3>Основная информация</h3>
+
+          <div class="form-group">
+            <label for="quoteAuthor" class="required">Автор цитаты:</label>
+            <input type="text"
+                   id="quoteAuthor"
+                   name="author"
+                   value="{{quote.author}}"
+                   required
+                   class="form-input"
+                   placeholder="Укажите автора цитаты"
+                   maxlength="100">
+            <small class="form-hint">Максимум 100 символов</small>
+          </div>
+
+          <div class="form-group">
+            <label for="quoteText" class="required">Текст цитаты:</label>
+            <textarea id="quoteText"
+                      name="text"
+                      rows="4"
+                      required
+                      class="form-textarea"
+                      placeholder="Введите текст цитаты..."
+                      maxlength="1000">{{quote.text}}</textarea>
+            <small class="form-hint">Максимум 1000 символов</small>
+          </div>
+
+          <div class="form-group">
+            <label for="quoteGenre" class="required">Жанр цитаты:</label>
+            <select id="quoteGenre" name="genre" required class="form-select">
+              {{#each genreOptions}}
+                <option value="{{this.value}}"
+                        {{#if (eq this.value ../quote.genre)}}selected{{/if}}>
+                  {{this.name}}
+                </option>
+              {{/each}}
+            </select>
+            <small class="form-hint">Выберите наиболее подходящий жанр</small>
+          </div>
+        </div>
+
+        <!-- Предварительный просмотр -->
+        <div class="form-section">
+          <h3>Предварительный просмотр</h3>
+          <div class="quote-preview">
+            <blockquote class="preview-text" id="previewText">
+              "{{quote.text}}"
+            </blockquote>
+            <cite class="preview-author" id="previewAuthor">— {{quote.author}}</cite>
+            <div class="preview-meta">
+              <span class="preview-genre" id="previewGenre">
+                {{#each genreOptions}}
+                  {{#if (eq this.value ../quote.genre)}}{{this.name}}{{/if}}
+                {{/each}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="form-section info-section">
+          <h3>Информация о цитате</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>ID цитаты:</strong> {{quote.id}}
+            </div>
+            <div class="info-item">
+              <strong>Добавил:</strong> {{quote.uploader}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопки управления -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            Сохранить изменения
+          </button>
+          <a href="/quotes/{{quote.id}}" class="btn btn-secondary">
+            Отменить
+          </a>
+          <button type="button" class="btn btn-danger" id="deleteBtn">
+            Удалить цитату
+          </button>
+        </div>
+      </form>
+
+      <!-- Скрытая форма удаления -->
+      <form id="deleteForm" action="/quotes/{{quote.id}}" method="POST" style="display: none;">
+        <input type="hidden" name="_method" value="DELETE">
+      </form>
+    </div>
+  </section>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Элементы формы
+    const authorInput = document.getElementById('quoteAuthor');
+    const textInput = document.getElementById('quoteText');
+    const genreSelect = document.getElementById('quoteGenre');
+
+    // Элементы предварительного просмотра
+    const previewText = document.getElementById('previewText');
+    const previewAuthor = document.getElementById('previewAuthor');
+    const previewGenre = document.getElementById('previewGenre');
+
+    // Названия жанров
+    const genreNames = {
+      'SMART': 'Умная',
+      'MOTIVATING': 'Мотивирующая',
+      'REALISTIC': 'Реалистичная',
+      'FUNNY': 'Смешная'
+    };
+
+    // Функция обновления предварительного просмотра
+    function updatePreview() {
+      const text = textInput.value.trim() || 'Введите текст цитаты...';
+      const author = authorInput.value.trim() || 'Автор не указан';
+      const genre = genreSelect.value;
+
+      previewText.textContent = `"${text}"`;
+      previewAuthor.textContent = `— ${author}`;
+      previewGenre.textContent = genreNames[genre] || 'Неизвестный жанр';
+    }
+
+    // Обработчики событий для обновления предварительного просмотра
+    authorInput.addEventListener('input', updatePreview);
+    textInput.addEventListener('input', updatePreview);
+    genreSelect.addEventListener('change', updatePreview);
+
+    // Обработчик кнопки удаления
+    const deleteBtn = document.getElementById('deleteBtn');
+    const deleteForm = document.getElementById('deleteForm');
+
+    deleteBtn.addEventListener('click', function() {
+      if (confirm('Вы уверены, что хотите удалить эту цитату? Это действие нельзя отменить.')) {
+        deleteForm.submit();
+      }
+    });
+
+    // Валидация формы
+    const form = document.querySelector('.edit-quote-form');
+    form.addEventListener('submit', function(e) {
+      const author = authorInput.value.trim();
+      const text = textInput.value.trim();
+
+      if (!author || !text) {
+        e.preventDefault();
+        alert('Пожалуйста, заполните все обязательные поля.');
+        return;
+      }
+
+      if (text.length < 10) {
+        e.preventDefault();
+        alert('Текст цитаты должен содержать минимум 10 символов.');
+        return;
+      }
+    });
+  });
+</script>

@@ -61,6 +61,7 @@ export class QuotesService {
       genre?: Genre;
       author?: string;
       search?: string;
+      sort?: string; // Добавляем параметр сортировки
     }
   ): Promise<{
     quotes: Quote[];
@@ -86,8 +87,23 @@ export class QuotesService {
     if (filters?.search) {
       where.OR = [
         { text: { contains: filters.search, mode: 'insensitive' } },
-        { author: { contains: filters.search, mode: 'insensitive' } },
       ];
+    }
+
+    let orderBy: any = { uploadedAt: 'desc' };
+
+    if (filters?.sort) {
+      switch (filters.sort) {
+        case 'date_asc':
+          orderBy = { uploadedAt: 'asc' };
+          break;
+        case 'date_desc':
+          orderBy = { uploadedAt: 'desc' };
+          break;
+        default:
+          orderBy = { uploadedAt: 'desc' };
+          break;
+      }
     }
 
     const [quoteData, total] = await Promise.all([
@@ -95,7 +111,7 @@ export class QuotesService {
         where,
         skip,
         take: limit,
-        orderBy: { uploadedAt: 'desc' },
+        orderBy,
         include: {
           user: true,
         }
