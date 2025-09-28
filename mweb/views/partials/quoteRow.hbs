@@ -1,0 +1,14 @@
+<tr class="quote-row">
+  <td class="quote-row__id">{{id}}</td>
+  <td class="quote-row__author">{{author}}</td>
+  <td class="quote-row__text">"{{text}}"</td>
+  <td class="quote-row__genre">
+    <span class="quote-genre quote-genre--{{genreClass}}">{{genreName}}</span>
+  </td>
+  <td class="quote-row__date">{{formattedDate}}</td>
+  {{#if ../isAuthenticated}}
+    <td class="quote-row__actions">
+      <button class="quote-row__delete-btn" data-quote-id="{{id}}">Удалить</button>
+    </td>
+  {{/if}}
+</tr>
