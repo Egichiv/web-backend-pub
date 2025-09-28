@@ -16,8 +16,8 @@
         <h3>Добавить новый пост</h3>
         <form action="/posts/create" method="POST" class="post-form">
           <div class="form-group">
-            <label for="postTitle">Заголовок поста:</label>
-            <input type="text" id="postTitle" name="title" required class="form-input">
+            <label for="postHeading">Заголовок поста:</label>
+            <input type="text" id="postHeading" name="heading" required class="form-input">
           </div>
           <div class="form-group">
             <label for="postText">Текст поста:</label>
@@ -66,9 +66,9 @@
     </div>
   </section>
 
-  <!-- Секция с последними цитатами -->
+  <!-- Секция с любимыми цитатами -->
   <section class="general-section">
-    <h2 class="section-title">Последние добавленные цитаты</h2>
+    <h2 class="section-title">Любимые цитаты админа</h2>
     <div class="new-quotes">
       <div class="new-quotes__content">
         {{#if latestQuotes}}

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +8,7 @@ import { MemesModule } from './modules/memes/memes.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { QuotesModule } from './modules/quotes/quotes.module';
 import { UsersModule } from './modules/users/users.module';
+import { MethodOverrideMiddleware } from './middleware/method-override.middleware';
 
 @Module({
   imports: [
@@ -23,4 +24,10 @@ import { UsersModule } from './modules/users/users.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(MethodOverrideMiddleware)
+      .forRoutes('*');
+  }
+}

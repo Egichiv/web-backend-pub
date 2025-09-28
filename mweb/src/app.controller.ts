@@ -22,6 +22,7 @@ export class AppController {
   async getHello(
     @Query('auth') auth?: string,
     @Query('success') success?: string,
+    @Query('error') error?: string,
     @Session() session?: any
   ) {
     const isAuthenticated = session?.isAuthenticated || auth === 'true';
@@ -38,6 +39,7 @@ export class AppController {
       isAuthenticated,
       username,
       successMessage: this.getSuccessMessage(success),
+      errorMessage: this.getErrorMessage(error),
       posts: recentPosts.map(post => ({
         id: post.id,
         title: post.heading,
@@ -277,6 +279,8 @@ export class AppController {
     switch (success) {
       case 'post_created':
         return 'Пост успешно создан!';
+      case 'post_deleted':
+        return 'Пост успешно удален!';
       case 'quote_created':
         return 'Цитата успешно добавлена!';
       case 'comment_created':
@@ -294,6 +298,10 @@ export class AppController {
 
   private getErrorMessage(error?: string): string | null {
     switch (error) {
+      case 'post_creation_failed':
+        return 'Ошибка при создании поста. Попробуйте еще раз.';
+      case 'delete_failed':
+        return 'Ошибка при удалении поста. Попробуйте еще раз.';
       case 'creation_failed':
         return 'Ошибка при создании. Попробуйте еще раз.';
       case 'comment_creation_failed':

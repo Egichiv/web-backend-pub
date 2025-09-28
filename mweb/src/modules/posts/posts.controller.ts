@@ -11,7 +11,8 @@ import {
   Render,
   Redirect,
   HttpException,
-  HttpStatus
+  HttpStatus,
+  Session
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,9 +25,15 @@ export class PostsController {
   // POST /posts/create - создание поста (обычно из формы на главной странице)
   @Post('create')
   @Redirect('/')
-  async create(@Body() createPostDto: CreatePostDto) {
+  async create(@Body() createPostDto: CreatePostDto, @Session() session: any) {
     try {
-      await this.postsService.create(createPostDto);
+      const postData = {
+        heading: createPostDto.heading,
+        text: createPostDto.text,
+        author: session.username
+      };
+
+      await this.postsService.create(postData);
       return { url: '/?success=post_created' };
     } catch (error) {
       return { url: '/?error=post_creation_failed' };
@@ -211,13 +218,13 @@ export class PostsController {
 
   // DELETE /posts/:id - удаление поста
   @Delete(':id')
-  @Redirect('/posts')
+  @Redirect('/')
   async remove(@Param('id') id: string) {
     try {
       await this.postsService.remove(+id);
-      return { url: '/posts?success=post_deleted' };
+      return { url: '/?success=post_deleted' };
     } catch (error) {
-      return { url: '/posts?error=delete_failed' };
+      return { url: '/?error=delete_failed' };
     }
   }
 
