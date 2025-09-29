@@ -15,6 +15,8 @@ import { join } from 'path';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TimingInterceptor } from './common/interceptors/timing.interceptor';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ETagInterceptor } from './common/interceptors/etag.interceptor';
+import { CacheControlInterceptor } from './common/interceptors/cache-control.interceptor';
 
 @Module({
   imports: [
@@ -45,7 +47,15 @@ import { CacheModule } from '@nestjs/cache-manager';
     {
       provide: APP_INTERCEPTOR,
       useClass: TimingInterceptor,
-    }],
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ETagInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheControlInterceptor,
+    },],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

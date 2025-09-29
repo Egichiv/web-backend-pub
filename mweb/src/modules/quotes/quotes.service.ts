@@ -159,10 +159,9 @@ export class QuotesService {
   }
 
   async findOne(id: number): Promise<Quote | null> {
-
-    const cachedQuote = await this.cacheManager.get<Quote>(String(id));
+    const cacheKey = `quote_${id}`;
+    const cachedQuote = await this.cacheManager.get<Quote>(cacheKey);
     if (cachedQuote) {
-      console.log('cachedQuote', cachedQuote);
       return cachedQuote;
     }
 
@@ -177,9 +176,7 @@ export class QuotesService {
       throw new NotFoundException("Цитата не найдена");
     }
 
-    await this.cacheManager.set(`quote_${id}`, quoteData, 5000); // TTL 5 секунд
-
-    return new Quote({
+    const quote = new Quote({
       id: quoteData.id,
       author: quoteData.author,
       text: quoteData.text,
@@ -191,6 +188,10 @@ export class QuotesService {
         nickname: quoteData.user.nickname,
       }
     });
+
+    await this.cacheManager.set(cacheKey, quote, 5000); // TTL 5 секунд
+
+    return quote;
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote | null> {

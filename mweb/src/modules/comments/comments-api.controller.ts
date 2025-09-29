@@ -22,6 +22,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentResponseDto } from './dto/comment-response.dto';
+import { CacheOneHour } from '../../common/decorators/cache-control.decorator';
 
 @ApiTags('comments')
 @Controller('api/comments')
@@ -75,6 +76,7 @@ export class CommentsApiController {
   }
 
   @Get(':id')
+  @CacheOneHour()
   @ApiOperation({ summary: 'Получить комментарий по ID' })
   @ApiParam({ name: 'id', type: Number, description: 'ID комментария' })
   @ApiResponse({
