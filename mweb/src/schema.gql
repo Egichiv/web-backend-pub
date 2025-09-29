@@ -1,0 +1,206 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Комментарий"""
+type CommentType {
+  """Имя автора комментария"""
+  authorName: String!
+
+  """Дата создания комментария"""
+  createdAt: DateTime!
+
+  """Форматированная дата создания"""
+  formattedCreatedAt: String!
+
+  """Уникальный идентификатор комментария"""
+  id: ID!
+
+  """Был ли комментарий создан недавно (в течение часа)"""
+  isRecent: Boolean!
+
+  """Валиден ли текст комментария"""
+  isValidText: Boolean!
+
+  """Текст комментария"""
+  text: String!
+
+  """Информация о пользователе, оставившем комментарий"""
+  user: UserType!
+
+  """ID пользователя, оставившего комментарий"""
+  userId: ID!
+}
+
+"""Входные данные для создания комментария"""
+input CreateCommentInput {
+  """Имя автора комментария (nickname пользователя)"""
+  author: String!
+
+  """Текст комментария"""
+  text: String!
+}
+
+"""Входные данные для создания цитаты"""
+input CreateQuoteInput {
+  """Автор цитаты"""
+  author: String!
+
+  """Жанр цитаты"""
+  genre: Genre!
+
+  """Текст цитаты"""
+  text: String!
+
+  """Имя пользователя, загрузившего цитату"""
+  uploader: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Жанр цитаты"""
+enum Genre {
+  FUNNY
+  MOTIVATING
+  REALISTIC
+  SMART
+}
+
+type Mutation {
+  """Создать новый комментарий"""
+  createComment(input: CreateCommentInput!): CommentType!
+
+  """Создать новую цитату"""
+  createQuote(input: CreateQuoteInput!): QuoteType!
+
+  """Удалить комментарий"""
+  deleteComment(id: Int!): Boolean!
+
+  """Удалить цитату"""
+  deleteQuote(id: Int!): Boolean!
+
+  """Обновить существующий комментарий"""
+  updateComment(id: Int!, input: UpdateCommentInput!): CommentType!
+
+  """Обновить существующую цитату"""
+  updateQuote(id: Int!, input: UpdateQuoteInput!): QuoteType!
+}
+
+type Query {
+  """Получить комментарий по ID"""
+  commentById(id: Int!): CommentType!
+
+  """Получить список комментариев с пагинацией"""
+  comments(limit: Int = 10, page: Int = 1): [CommentType!]!
+
+  """Получить общее количество комментариев"""
+  commentsCount: Int!
+
+  """Получить цитату по ID"""
+  quoteById(id: Int!): QuoteType!
+
+  """Получить список цитат с фильтрацией"""
+  quotes(filters: QuoteFiltersInput): [QuoteType!]!
+
+  """Получить все цитаты конкретного автора"""
+  quotesByAuthor(author: String!): [QuoteType!]!
+
+  """Получить все цитаты определенного жанра"""
+  quotesByGenre(genre: String!): [QuoteType!]!
+
+  """Получить все цитаты, загруженные конкретным пользователем"""
+  quotesByUser(userId: Int!): [QuoteType!]!
+
+  """Получить случайную цитату"""
+  randomQuote: QuoteType!
+
+  """Получить последние комментарии"""
+  recentComments(limit: Int = 5): [CommentType!]!
+}
+
+"""Входные данные для фильтрации цитат"""
+input QuoteFiltersInput {
+  """Фильтр по автору"""
+  author: String
+
+  """Фильтр по жанру"""
+  genre: Genre
+
+  """Поисковый запрос (по автору или тексту)"""
+  search: String
+
+  """Фильтр по ID пользователя"""
+  userId: Int
+}
+
+"""Цитата"""
+type QuoteType {
+  """Автор цитаты"""
+  author: String!
+
+  """Форматированная дата загрузки"""
+  formattedUploadedAt: String!
+
+  """Полное описание цитаты"""
+  fullDescription: String!
+
+  """Жанр цитаты"""
+  genre: Genre!
+
+  """Название жанра на русском языке"""
+  genreName: String!
+
+  """Уникальный идентификатор цитаты"""
+  id: Int!
+
+  """Была ли цитата загружена недавно (в течение недели)"""
+  isRecentlyUploaded: Boolean!
+
+  """Прошла ли цитата валидацию"""
+  isValid: Boolean!
+
+  """Текст цитаты"""
+  text: String!
+
+  """Дата загрузки цитаты"""
+  uploadedAt: DateTime!
+
+  """Имя загрузившего пользователя"""
+  uploaderName: String!
+
+  """Информация о пользователе, загрузившем цитату"""
+  user: UserType!
+
+  """ID пользователя, загрузившего цитату"""
+  userId: Int!
+}
+
+"""Входные данные для обновления комментария"""
+input UpdateCommentInput {
+  """Текст комментария"""
+  text: String
+}
+
+"""Входные данные для обновления цитаты"""
+input UpdateQuoteInput {
+  """Автор цитаты"""
+  author: String
+
+  """Жанр цитаты"""
+  genre: Genre
+
+  """Текст цитаты"""
+  text: String
+}
+
+"""Пользователь (краткая информация)"""
+type UserType {
+  """Уникальный идентификатор пользователя"""
+  id: Int!
+
+  """Никнейм пользователя"""
+  nickname: String!
+}
