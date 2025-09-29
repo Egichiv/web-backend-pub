@@ -12,11 +12,19 @@ import { MethodOverrideMiddleware } from './middleware/method-override.middlewar
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TimingInterceptor } from './common/interceptors/timing.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+
+    CacheModule.register({
+      ttl: parseInt(process.env.CACHE_TTL || '5') * 1000,
+      max: parseInt(process.env.CACHE_MAX_ITEMS || '100'),
+    }),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -33,7 +41,11 @@ import { join } from 'path';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimingInterceptor,
+    }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

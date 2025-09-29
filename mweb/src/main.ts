@@ -12,6 +12,7 @@ import { NextFunction } from 'express';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+import { TimingInterceptor } from './common/interceptors/timing.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -28,6 +29,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalInterceptors(new TimingInterceptor());
 
   // Поддержка методов PATCH и DELETE
   app.use(methodOverride('_method'));

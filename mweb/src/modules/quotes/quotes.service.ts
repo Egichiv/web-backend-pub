@@ -1,13 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { Quote } from './entities/quote.entity';
 import { Genre } from '@prisma/client';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class QuotesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService,
+              @Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async create(createQuoteDto: CreateQuoteDto): Promise<Quote> {
     // Находим пользователя по имени или создаем временного
@@ -157,6 +159,13 @@ export class QuotesService {
   }
 
   async findOne(id: number): Promise<Quote | null> {
+
+    const cachedQuote = await this.cacheManager.get<Quote>(String(id));
+    if (cachedQuote) {
+      console.log('cachedQuote', cachedQuote);
+      return cachedQuote;
+    }
+
     const quoteData = await this.prisma.quote.findUnique({
       where: { id },
       include: {
@@ -167,6 +176,8 @@ export class QuotesService {
     if (!quoteData) {
       throw new NotFoundException("Цитата не найдена");
     }
+
+    await this.cacheManager.set(`quote_${id}`, quoteData, 5000); // TTL 5 секунд
 
     return new Quote({
       id: quoteData.id,
