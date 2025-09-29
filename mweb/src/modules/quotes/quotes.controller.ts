@@ -85,7 +85,6 @@ export class QuotesController {
         genre: quote.genre,
         genreName: quote.getGenreName(),
         uploadedAt: quote.uploadedAt,
-        formattedDate: quote.getFormattedUploadedAt(),
         uploader: quote.getUploaderName(),
         preview: quote.getPreview(200),
         fullDescription: quote.getFullDescription(),
@@ -104,7 +103,7 @@ export class QuotesController {
       selectedGenre: genre || '',
       selectedAuthor: author || '',
       searchTerm: search || '',
-      selectedSort: sort || 'date_desc', // Добавляем выбранную сортировку
+      selectedSort: sort || 'id_desc',
       genreOptions: [
         { value: '', name: 'Все жанры' },
         { value: 'SMART', name: 'Умные' },

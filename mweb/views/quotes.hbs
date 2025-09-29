@@ -73,6 +73,9 @@
   <section class="quotes-marks-section">
     <h2 class="quotes-marks-section__heading">
       Найдено цитат: {{quotesCount}}
+      {{#if hasPagination}}
+        (страница {{currentPageNumber}} из {{totalPages}})
+      {{/if}}
     </h2>
 
     {{#if quotes}}
@@ -102,16 +105,57 @@
         <div class="pagination">
           {{#if hasPrevPage}}
             <a href="/quotes?page={{prevPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
-            class="pagination__link">← Предыдущая</a>
+            class="pagination__link pagination__link--prev">← Предыдущая</a>
           {{/if}}
 
-          <span class="pagination__info">
-            Страница {{currentPageNumber}} из {{totalPages}}
-          </span>
+          <div class="pagination__info">
+            <span class="pagination__current">Страница {{currentPageNumber}} из {{totalPages}}</span>
+            <span class="pagination__total">Всего цитат: {{total}}</span>
+          </div>
 
           {{#if hasNextPage}}
             <a href="/quotes?page={{nextPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
-            class="pagination__link">Следующая →</a>
+            class="pagination__link pagination__link--next">Следующая →</a>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      <!-- Номера страниц (для удобства навигации) -->
+      {{#if hasPagination}}
+        <div class="pagination-numbers">
+          {{#if (gt totalPages 1)}}
+            <!-- Первая страница -->
+            {{#if (gt currentPageNumber 2)}}
+              <a href="/quotes?page=1&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
+              class="pagination__number">1</a>
+              {{#if (gt currentPageNumber 3)}}
+                <span class="pagination__dots">...</span>
+              {{/if}}
+            {{/if}}
+
+            <!-- Предыдущая страница -->
+            {{#if hasPrevPage}}
+              <a href="/quotes?page={{prevPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
+              class="pagination__number">{{prevPage}}</a>
+            {{/if}}
+
+            <!-- Текущая страница -->
+            <span class="pagination__number pagination__number--current">{{currentPageNumber}}</span>
+
+            <!-- Следующая страница -->
+            {{#if hasNextPage}}
+              <a href="/quotes?page={{nextPage}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
+              class="pagination__number">{{nextPage}}</a>
+            {{/if}}
+
+            <!-- Последняя страница -->
+            {{#if (lt currentPageNumber (dec totalPages))}}
+              {{#if (lt currentPageNumber (dec (dec totalPages)))}}
+                <span class="pagination__dots">...</span>
+              {{/if}}
+              <a href="/quotes?page={{totalPages}}&search={{searchTerm}}&author={{selectedAuthor}}&genre={{selectedGenre}}&sort={{selectedSort}}"
+              class="pagination__number">{{totalPages}}</a>
+            {{/if}}
           {{/if}}
         </div>
       {{/if}}

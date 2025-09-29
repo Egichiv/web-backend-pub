@@ -34,7 +34,7 @@ export class CommentsController {
 
   // GET /comments - страница со всеми комментариями
   @Get()
-  @Render('comments/index')
+  @Render('about')
   async findAll(@Query('page') page?: string) {
     let pageNumber = 1;
     if (page != null) {

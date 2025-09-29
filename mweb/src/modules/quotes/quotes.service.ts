@@ -61,7 +61,7 @@ export class QuotesService {
       genre?: Genre;
       author?: string;
       search?: string;
-      sort?: string; // Добавляем параметр сортировки
+      sort?: string;
     }
   ): Promise<{
     quotes: Quote[];
@@ -76,32 +76,55 @@ export class QuotesService {
     // Строим условия фильтрации
     const where: any = {};
 
+    // Массив условий AND
+    const andConditions: any[] = [];
+
+    // Фильтр по жанру
     if (filters?.genre) {
-      where.genre = filters.genre;
+      andConditions.push({ genre: filters.genre });
     }
 
-    if (filters?.author) {
-      where.author = { contains: filters.author, mode: 'insensitive' };
+    // Фильтр по автору (точный поиск)
+    if (filters?.author && filters?.author.trim()) {
+      andConditions.push({
+        author: { contains: filters.author.trim(), mode: 'insensitive' }
+      });
     }
 
-    if (filters?.search) {
-      where.OR = [
-        { text: { contains: filters.search, mode: 'insensitive' } },
-      ];
+    // Поиск по тексту (независимо от фильтра автора)
+    if (filters?.search && filters?.search.trim()) {
+      andConditions.push({
+        OR: [
+          { text: { contains: filters.search.trim(), mode: 'insensitive' } },
+          { author: { contains: filters.search.trim(), mode: 'insensitive' } },
+        ]
+      });
     }
 
-    let orderBy: any = { uploadedAt: 'desc' };
+    // Если есть условия, применяем их через AND
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
+    }
+
+    // Отладочная информация
+    console.log('=== FILTERS DEBUG ===');
+    console.log('Original filters:', filters);
+    console.log('Generated where clause:', JSON.stringify(where, null, 2));
+    console.log('==================');
+
+    // Определяем сортировку (убираем сортировку по дате)
+    let orderBy: any = { id: 'desc' }; // По умолчанию по ID в убывающем порядке
 
     if (filters?.sort) {
       switch (filters.sort) {
-        case 'date_asc':
-          orderBy = { uploadedAt: 'asc' };
+        case 'id_asc':
+          orderBy = { id: 'asc' };
           break;
-        case 'date_desc':
-          orderBy = { uploadedAt: 'desc' };
+        case 'id_desc':
+          orderBy = { id: 'desc' };
           break;
         default:
-          orderBy = { uploadedAt: 'desc' };
+          orderBy = { id: 'desc' };
           break;
       }
     }
@@ -118,6 +141,8 @@ export class QuotesService {
       }),
       this.prisma.quote.count({ where })
     ]);
+
+    console.log('Found quotes count:', total);
 
     const totalPages = Math.ceil(total / limit);
 

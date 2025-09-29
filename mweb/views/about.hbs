@@ -13,24 +13,27 @@
       <h2 class="section-title">Статистика сайта</h2>
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-number">{{stats.totalQuotes}}</div>
+          <div class="stat-number" id="stat-totalQuotes">{{stats.totalQuotes}}</div>
           <div class="stat-label">Цитат</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number">{{stats.totalAuthors}}</div>
+          <div class="stat-number" id="stat-totalAuthors">{{stats.totalAuthors}}</div>
           <div class="stat-label">Авторов</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number">{{stats.totalUsers}}</div>
+          <div class="stat-number" id="stat-totalUsers">{{stats.totalUsers}}</div>
           <div class="stat-label">Пользователей</div>
         </div>
         <div class="stat-card">
-          <div class="stat-number">{{stats.totalComments}}</div>
+          <div class="stat-number" id="stat-totalComments">{{stats.totalComments}}</div>
           <div class="stat-label">Комментариев</div>
         </div>
       </div>
     </section>
   {{/if}}
+
+  <!-- Уведомления -->
+  <div id="notifications"></div>
 
   <section class="general-section">
     <h2 class="section-title">Наша миссия</h2>
@@ -71,6 +74,12 @@
     {{#if commentSuccess}}
       <div class="alert alert-success">
         Спасибо за ваш отзыв!
+      </div>
+    {{/if}}
+
+    {{#if commentError}}
+      <div class="alert alert-error">
+        Произошла ошибка при отправке комментария.
       </div>
     {{/if}}
 
@@ -128,8 +137,8 @@
             {{/if}}
 
             <span class="pagination__info">
-                            Страница {{currentPageNumber}} из {{totalPages}}
-                        </span>
+              Страница {{currentPageNumber}} из {{totalPages}}
+            </span>
 
             {{#if hasNextPage}}
               <a href="/about?page={{nextPage}}" class="pagination__link">Следующие →</a>
@@ -144,3 +153,133 @@
     </div>
   </section>
 </div>
+
+<style>
+  /* Стили для уведомлений */
+  #notifications {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .notification {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #c3e6cb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease forwards;
+    min-width: 250px;
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .notification.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+  }
+
+  .notification.fade-out {
+    animation: slideOut 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  .stat-card {
+    transition: transform 0.2s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+  }
+</style>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const eventSource = new EventSource('/about/stats-events');
+
+    eventSource.onmessage = function(event) {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'stats_update') {
+          // Обновляем статистику
+          document.getElementById('stat-totalQuotes').textContent = data.stats.totalQuotes;
+          document.getElementById('stat-totalAuthors').textContent = data.stats.totalAuthors;
+          document.getElementById('stat-totalUsers').textContent = data.stats.totalUsers;
+          document.getElementById('stat-totalComments').textContent = data.stats.totalComments;
+
+          // Показываем уведомление
+          showNotification('Статистика обновлена: ' + new Date().toLocaleTimeString('ru-RU'));
+        }
+      } catch (error) {
+        console.error('Ошибка обработки SSE:', error);
+      }
+    };
+
+    eventSource.onerror = function(error) {
+      console.error('Ошибка SSE соединения:', error);
+      showNotification('Ошибка соединения с сервером', 'error');
+    };
+  });
+
+  function showNotification(message, type = 'success') {
+    const container = document.getElementById('notifications');
+
+    if (!container) {
+      console.error('Элемент notifications не найден');
+      return;
+    }
+
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+
+    if (type === 'error') {
+      notification.classList.add('error');
+    }
+
+    container.appendChild(notification);
+
+    // Ждем завершения анимации появления, затем отсчитываем время показа
+    setTimeout(() => {
+      // Убираем уведомление через 5 секунд ПОСЛЕ появления
+      setTimeout(() => {
+        // Добавляем класс для анимации исчезновения
+        notification.classList.add('fade-out');
+
+        // Удаляем элемент после завершения анимации
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 300); // Длительность анимации slideOut
+      }, 5000); // Время показа: 5 секунд
+    }, 300); // Ждем завершения анимации slideIn
+  }
+</script>

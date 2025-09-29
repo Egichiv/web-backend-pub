@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Query, Body, Render, Redirect, Session } from '@nestjs/common';
+import { Controller, Get, Post, Query, Body, Render, Redirect, Session, Sse, MessageEvent } from '@nestjs/common';
+import { Observable, interval, map, switchMap, catchError, of } from 'rxjs';
 import { AppService } from './app.service';
 import { CommentsService } from './modules/comments/comments.service';
 import { QuotesService } from './modules/quotes/quotes.service';
@@ -273,6 +274,50 @@ export class AppController {
       session.destroy();
     }
     return { url: '/?auth=false&success=logout_successful' };
+  }
+
+  @Sse('about/stats-events')
+  sendStatsUpdates(): Observable<MessageEvent> {
+    return interval(10000).pipe( // Каждые 10 секунд
+      switchMap(async () => {
+        try {
+          const [totalComments, totalQuotes, totalUsers] = await Promise.all([
+            this.commentsService.getTotalCount(),
+            this.quotesService.getTotalCount(),
+            this.usersService.getTotalCount(),
+          ]);
+
+          const uniqueAuthorsCount = await this.quotesService.getUniqueAuthorsCount();
+
+          return {
+            data: JSON.stringify({
+              type: 'stats_update',
+              timestamp: new Date().toISOString(),
+              stats: {
+                totalComments,
+                totalQuotes,
+                totalAuthors: uniqueAuthorsCount,
+                totalUsers,
+              },
+            }),
+          };
+        } catch (error) {
+          console.error('SSE Error:', error);
+          return {
+            data: JSON.stringify({
+              type: 'error',
+              message: 'Ошибка получения данных',
+            }),
+          };
+        }
+      }),
+      map((data) => data as MessageEvent),
+      catchError(() =>
+        of({
+          data: JSON.stringify({ type: 'error', message: 'Ошибка соединения' }),
+        } as MessageEvent),
+      ),
+    );
   }
 
   private getSuccessMessage(success?: string): string | null {
