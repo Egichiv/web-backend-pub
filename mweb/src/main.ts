@@ -9,6 +9,9 @@ import session from 'express-session';
 import { registerHandlebarsHelpers } from './helpers/handlebars.helpers';
 import { IResponseWithLayout } from './interfaces/IResponseWithLayout';
 import { NextFunction } from 'express';
+import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,6 +37,14 @@ async function bootstrap() {
   app.setBaseViewsDir(join(process.cwd(), 'views'));
   app.setViewEngine('hbs');
 
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
+
+  app.useGlobalFilters(new AllExceptionsFilter());
+
   hbs.registerPartials(join(process.cwd(), 'views', 'partials'));
 
   registerHandlebarsHelpers();
@@ -48,8 +59,37 @@ async function bootstrap() {
     map: { html: 'hbs' },
   });
 
-  const config = app.get(ConfigService);
-  const port = Number(config.get('PORT')) || 3000;
+  const config = new DocumentBuilder()
+    .setTitle('Quotes & Memes API')
+    .setDescription('RESTful API для платформы цитат и мемов')
+    .setVersion('1.0')
+    .addTag('users', 'Операции с пользователями')
+    .addTag('comments', 'Операции с комментариями')
+    .addTag('posts', 'Операции с постами')
+    .addTag('quotes', 'Операции с цитатами')
+    .addTag('memes', 'Операции с мемами')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: 'none',
+      filter: true,
+      showRequestHeaders: true,
+      sortByTags: true,
+    },
+    customSiteTitle: 'Quotes Platform API Documentation',
+    customCss: `
+      .swagger-ui .topbar { display: none; }
+      .swagger-ui .info { margin: 20px 0; }
+      .swagger-ui .scheme-container { background: #fafafa; padding: 15px; border-radius: 4px; }
+    `,
+  });
+
+  const configService = app.get(ConfigService);
+  const port = Number(configService.get('PORT')) || 3000;
 
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);

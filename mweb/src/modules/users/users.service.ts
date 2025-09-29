@@ -1,4 +1,10 @@
-import { Injectable, ConflictException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -81,7 +87,7 @@ export class UsersService {
     });
 
     if (!userData) {
-      return null;
+      throw new NotFoundException('Пользователь не найден');
     }
 
     return new User({
@@ -171,15 +177,10 @@ export class UsersService {
   }
 
   async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<void> {
-    // Проверяем совпадение нового пароля и подтверждения
-    if (changePasswordDto.newPassword !== changePasswordDto.confirmPassword) {
-      throw new BadRequestException('Новый пароль и подтверждение не совпадают');
-    }
-
     // Получаем пользователя
     const user = await this.findOne(userId);
     if (!user) {
-      throw new BadRequestException('Пользователь не найден');
+      throw new NotFoundException('Пользователь не найден');
     }
 
     // Проверяем текущий пароль
@@ -227,6 +228,11 @@ export class UsersService {
     memesCount: number;
     postsCount: number;
   }> {
+    const user = await this.findOne(userId);
+    if (!user) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+
     const [commentsCount, quotesCount, memesCount, postsCount] = await Promise.all([
       this.prisma.comment.count({ where: { userId } }),
       this.prisma.quote.count({ where: { userId } }),

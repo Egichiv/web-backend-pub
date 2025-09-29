@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { UpdateMemeDto } from './dto/update-meme.dto';
@@ -101,7 +101,7 @@ export class MemesService {
     });
 
     if (!memeData) {
-      return null;
+      throw new NotFoundException('Мем не найден');
     }
 
     return new Meme({
@@ -116,6 +116,7 @@ export class MemesService {
   }
 
   async update(id: number, updateMemeDto: UpdateMemeDto): Promise<Meme | null> {
+    await this.findOne(id);
     const memeData = await this.prisma.meme.update({
       where: { id },
       data: {
@@ -138,6 +139,7 @@ export class MemesService {
   }
 
   async remove(id: number): Promise<void> {
+    await this.findOne(id);
     await this.prisma.meme.delete({
       where: { id }
     });

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
@@ -165,7 +165,7 @@ export class QuotesService {
     });
 
     if (!quoteData) {
-      return null;
+      throw new NotFoundException("Цитата не найдена");
     }
 
     return new Quote({
@@ -183,6 +183,7 @@ export class QuotesService {
   }
 
   async update(id: number, updateQuoteDto: UpdateQuoteDto): Promise<Quote | null> {
+    await this.findOne(id);
     const quoteData = await this.prisma.quote.update({
       where: { id },
       data: {
@@ -210,6 +211,7 @@ export class QuotesService {
   }
 
   async remove(id: number): Promise<void> {
+    await this.findOne(id);
     await this.prisma.quote.delete({
       where: { id }
     });

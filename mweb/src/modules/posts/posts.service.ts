@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -104,7 +104,7 @@ export class PostsService {
     });
 
     if (!postData) {
-      return null;
+      throw new NotFoundException('Пост не найден');
     }
 
     return new Post({
@@ -120,6 +120,8 @@ export class PostsService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<Post | null> {
+    await this.findOne(id);
+
     const postData = await this.prisma.post.update({
       where: { id },
       data: {
@@ -144,6 +146,7 @@ export class PostsService {
   }
 
   async remove(id: number): Promise<void> {
+    await this.findOne(id);
     await this.prisma.post.delete({
       where: { id }
     });
