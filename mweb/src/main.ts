@@ -13,7 +13,7 @@ import { NextFunction } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Настройка сессий
+  // Для сессий
   app.use(
     session({
       secret: process.env.SESSION_SECRET || 'your-secret-key-here',
@@ -26,7 +26,7 @@ async function bootstrap() {
     }),
   );
 
-  // Поддержка методов PATCH и DELETE через формы
+  // Поддержка методов PATCH и DELETE
   app.use(methodOverride('_method'));
 
   app.useStaticAssets(join(process.cwd(), 'public'));

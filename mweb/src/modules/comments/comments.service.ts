@@ -145,7 +145,6 @@ export class CommentsService {
     });
   }
 
-  // Дополнительный метод для получения количества комментариев
   async getTotalCount(): Promise<number> {
     return this.prisma.comment.count();
   }

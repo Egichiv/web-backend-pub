@@ -73,25 +73,22 @@ export class QuotesService {
   }> {
     const skip = (page - 1) * limit;
 
-    // Строим условия фильтрации
     const where: any = {};
 
-    // Массив условий AND
     const andConditions: any[] = [];
 
-    // Фильтр по жанру
     if (filters?.genre) {
       andConditions.push({ genre: filters.genre });
     }
 
-    // Фильтр по автору (точный поиск)
+    // Фильтр по автору
     if (filters?.author && filters?.author.trim()) {
       andConditions.push({
         author: { contains: filters.author.trim(), mode: 'insensitive' }
       });
     }
 
-    // Поиск по тексту (независимо от фильтра автора)
+    // Поиск по тексту
     if (filters?.search && filters?.search.trim()) {
       andConditions.push({
         OR: [
@@ -101,18 +98,10 @@ export class QuotesService {
       });
     }
 
-    // Если есть условия, применяем их через AND
     if (andConditions.length > 0) {
       where.AND = andConditions;
     }
 
-    // Отладочная информация
-    console.log('=== FILTERS DEBUG ===');
-    console.log('Original filters:', filters);
-    console.log('Generated where clause:', JSON.stringify(where, null, 2));
-    console.log('==================');
-
-    // Определяем сортировку (убираем сортировку по дате)
     let orderBy: any = { id: 'desc' }; // По умолчанию по ID в убывающем порядке
 
     if (filters?.sort) {
@@ -141,8 +130,6 @@ export class QuotesService {
       }),
       this.prisma.quote.count({ where })
     ]);
-
-    console.log('Found quotes count:', total);
 
     const totalPages = Math.ceil(total / limit);
 

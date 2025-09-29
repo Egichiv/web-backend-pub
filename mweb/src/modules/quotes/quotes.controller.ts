@@ -34,7 +34,7 @@ export class QuotesController {
     }
   }
 
-  // GET /quotes - главная страница цитат с фильтрами и поиском
+  // GET /quotes - главная страница цитат
   @Get()
   @Render('quotes/index')
   async findAll(
@@ -99,7 +99,6 @@ export class QuotesController {
       prevPage: result.hasPrev ? result.currentPage - 1 : null,
       hasPagination: result.totalPages > 1,
 
-      // Фильтры
       selectedGenre: genre || '',
       selectedAuthor: author || '',
       searchTerm: search || '',
@@ -113,12 +112,11 @@ export class QuotesController {
       ],
       genreStats,
 
-      // Построение URL для фильтров
       filterParams: this.buildFilterParams({ genre, author, search, sort }),
     };
   }
 
-  // GET /quotes/add - форма добавления цитаты (альтернативный роут к /addQuote)
+  // GET /quotes/add - форма добавления цитаты
   @Get('add')
   @Render('quotes/create')
   addForm(@Query('auth') auth?: string) {

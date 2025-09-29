@@ -47,10 +47,6 @@
             </div>
             <div class="meme-card__info">
               <p class="meme-card__uploader">От: {{uploader}}</p>
-              <p class="meme-card__domain">Источник: {{domain}}</p>
-              <p class="meme-card__link">
-                <a href="{{link}}" target="_blank" rel="noopener">{{shortLink}}</a>
-              </p>
             </div>
             {{#if ../isAuthenticated}}
               <div class="meme-card__actions">
@@ -119,31 +115,3 @@
     </div>
   </section>
 </div>
-
-<!-- Скрипт для управления отображением мемов -->
-<script>
-  function toggleView(viewType) {
-    const gallery = document.getElementById('memesGallery');
-    if (viewType === 'grid') {
-      gallery.classList.remove('memes-list');
-      gallery.classList.add('memes-grid');
-    } else {
-      gallery.classList.remove('memes-grid');
-      gallery.classList.add('memes-list');
-    }
-  }
-
-  function changeSize(size) {
-    const gallery = document.getElementById('memesGallery');
-    gallery.classList.remove('size-small', 'size-medium', 'size-large');
-    gallery.classList.add(`size-${size}`);
-  }
-
-  function loadMoreMemes() {
-    // Это будет реализовано в JavaScript для динамической подгрузки
-    const nextPage = {{nextPage}};
-    if (nextPage) {
-      window.location.href = `/memes?page=${nextPage}`;
-    }
-  }
-</script>

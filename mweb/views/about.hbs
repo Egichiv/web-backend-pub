@@ -155,7 +155,6 @@
 </div>
 
 <style>
-  /* Стили для уведомлений */
   #notifications {
     position: fixed;
     top: 20px;
@@ -228,13 +227,11 @@
         const data = JSON.parse(event.data);
 
         if (data.type === 'stats_update') {
-          // Обновляем статистику
           document.getElementById('stat-totalQuotes').textContent = data.stats.totalQuotes;
           document.getElementById('stat-totalAuthors').textContent = data.stats.totalAuthors;
           document.getElementById('stat-totalUsers').textContent = data.stats.totalUsers;
           document.getElementById('stat-totalComments').textContent = data.stats.totalComments;
 
-          // Показываем уведомление
           showNotification('Статистика обновлена: ' + new Date().toLocaleTimeString('ru-RU'));
         }
       } catch (error) {
@@ -266,20 +263,16 @@
 
     container.appendChild(notification);
 
-    // Ждем завершения анимации появления, затем отсчитываем время показа
     setTimeout(() => {
-      // Убираем уведомление через 5 секунд ПОСЛЕ появления
       setTimeout(() => {
-        // Добавляем класс для анимации исчезновения
         notification.classList.add('fade-out');
 
-        // Удаляем элемент после завершения анимации
         setTimeout(() => {
           if (notification.parentElement) {
             notification.remove();
           }
-        }, 300); // Длительность анимации slideOut
-      }, 5000); // Время показа: 5 секунд
-    }, 300); // Ждем завершения анимации slideIn
+        }, 300);
+      }, 5000);
+    }, 300);
   }
 </script>

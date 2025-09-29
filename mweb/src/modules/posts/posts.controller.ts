@@ -22,7 +22,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  // POST /posts/create - создание поста (обычно из формы на главной странице)
+  // POST /posts/create - создание поста
   @Post('create')
   @Redirect('/')
   async create(@Body() createPostDto: CreatePostDto, @Session() session: any) {
@@ -61,7 +61,6 @@ export class PostsController {
     let paginationData;
 
     if (search) {
-      // Поиск постов
       const searchResults = await this.postsService.searchPosts(search);
       posts = searchResults;
       total = searchResults.length;
@@ -72,7 +71,6 @@ export class PostsController {
         hasPrev: false,
       };
     } else {
-      // Обычная пагинация
       const result = await this.postsService.findAll(pageNumber, 5); // 5 постов на страницу
       posts = result.posts;
       total = result.total;
@@ -95,8 +93,8 @@ export class PostsController {
         id: post.id,
         heading: post.heading,
         text: post.text,
-        author: post.getAuthorName(), // используем метод из entity
-        preview: post.getPreview(150), // превью до 150 символов
+        author: post.getAuthorName(),
+        preview: post.getPreview(150),
         wordCount: post.getWordCount(),
         isLongPost: post.isLongPost(),
       })),

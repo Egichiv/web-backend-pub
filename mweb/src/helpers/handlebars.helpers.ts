@@ -1,12 +1,10 @@
 import hbs from 'hbs';
 
 export function registerHandlebarsHelpers(): void {
-  // Хелпер для сравнения значений
   hbs.registerHelper('eq', function (a: any, b: any): boolean {
     return a === b;
   });
 
-  // Хелпер для логического ИЛИ
   hbs.registerHelper('or', function (...args: any[]): boolean {
     // Проверяем все аргументы кроме последнего
     for (let i = 0; i < args.length - 1; i++) {
@@ -17,7 +15,6 @@ export function registerHandlebarsHelpers(): void {
     return false;
   });
 
-  // Хелпер для форматирования даты
   hbs.registerHelper('formatDate', function (date: Date | string): string {
     if (!date) return '';
 
@@ -33,7 +30,6 @@ export function registerHandlebarsHelpers(): void {
     return dateObj.toLocaleDateString('ru-RU', options);
   });
 
-  // Хелпер для определения CSS класса жанра
   hbs.registerHelper('genreClass', function (genre: string): string {
     const genreClasses: Record<string, string> = {
       Умная: 'smart',
@@ -49,7 +45,6 @@ export function registerHandlebarsHelpers(): void {
     return genreClasses[genre] || 'default';
   });
 
-  // Хелпер для обрезки текста
   hbs.registerHelper(
     'truncate',
     function (text: string, length: number): string {
@@ -58,12 +53,10 @@ export function registerHandlebarsHelpers(): void {
     },
   );
 
-  // Хелпер для подсчета элементов
   hbs.registerHelper('count', function (array: any[]): number {
     return array ? array.length : 0;
   });
 
-  // Хелпер для проверки наличия следующей страницы
   hbs.registerHelper(
     'hasNext',
     function (current: number, total: number): boolean {
@@ -71,22 +64,18 @@ export function registerHandlebarsHelpers(): void {
     },
   );
 
-  // Хелпер для проверки наличия предыдущей страницы
   hbs.registerHelper('hasPrev', function (current: number): boolean {
     return current > 1;
   });
 
-  // Хелпер для увеличения числа на 1
   hbs.registerHelper('inc', function (value: number): number {
     return value + 1;
   });
 
-  // Хелпер для уменьшения числа на 1
   hbs.registerHelper('dec', function (value: number): number {
     return value - 1;
   });
 
-  // Хелпер для дебага (выводит значение в консоль)
   hbs.registerHelper('debug', function (value: any): void {
     console.log('Debug:', value);
   });
@@ -106,34 +95,28 @@ export function registerHandlebarsHelpers(): void {
     return new Intl.DateTimeFormat('ru-RU', options).format(new Date(date));
   });
 
-  // Хелпер для сравнения значений (для условий в шаблонах)
   hbs.registerHelper('eq', function(a: any, b: any) {
     return a === b;
   });
 
-  // Хелпер для логического ИЛИ
   hbs.registerHelper('or', function(a: any, b: any) {
     return a || b;
   });
 
-  // Хелпер для логического И
   hbs.registerHelper('and', function(a: any, b: any) {
     return a && b;
   });
 
-  // Хелпер для проверки, содержит ли строка подстроку
   hbs.registerHelper('contains', function(str: string, substr: string) {
     return str && str.includes(substr);
   });
 
-  // Хелпер для обрезки текста
   hbs.registerHelper('truncate', function(str: string, length: number) {
     if (!str) return '';
     if (str.length <= length) return str;
     return str.substring(0, length) + '...';
   });
 
-  // Хелпер для отображения времени в относительном формате
   hbs.registerHelper('timeAgo', function(date: Date) {
     if (!date) return 'Неизвестно';
 
@@ -153,7 +136,6 @@ export function registerHandlebarsHelpers(): void {
     }).format(new Date(date));
   });
 
-  // Хелпер для отображения множественного числа
   hbs.registerHelper('pluralize', function(count: number, one: string, few: string, many: string) {
     const lastDigit = count % 10;
     const lastTwoDigits = count % 100;

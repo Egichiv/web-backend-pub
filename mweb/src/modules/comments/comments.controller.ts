@@ -20,7 +20,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  // POST /comments/create - создание комментария (из формы на /about)
+  // POST /comments/create - создание комментария
   @Post('create')
   @Redirect('/about')
   async create(@Body() createCommentDto: CreateCommentDto) {

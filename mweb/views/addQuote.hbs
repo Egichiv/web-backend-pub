@@ -91,24 +91,4 @@
       </ul>
     </div>
   </section>
-
-  <!-- Последние добавленные цитаты этим пользователем -->
-  {{#if userQuotes}}
-    <section class="general-section">
-      <h2 class="section-title">Ваши последние цитаты</h2>
-      <div class="user-quotes-list">
-        {{#each userQuotes}}
-          <div class="mini-quote-card">
-            <blockquote>"{{this.text}}"</blockquote>
-            <cite>— {{this.author}}</cite>
-            <span class="quote-status {{this.status}}">
-                            {{#if (eq this.status 'published')}}Опубликовано{{/if}}
-              {{#if (eq this.status 'pending')}}На модерации{{/if}}
-              {{#if (eq this.status 'rejected')}}Отклонено{{/if}}
-                        </span>
-          </div>
-        {{/each}}
-      </div>
-    </section>
-  {{/if}}
 </div>
